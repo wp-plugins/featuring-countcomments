@@ -10,7 +10,7 @@ Count the number of comments by authornames
 
 == Description ==
 
-Count the number of comments by authornames. - Attention! This means, that your commenters have to be registered and logged in to comment! This will not work in weblogs where everyone can comment! original code by Martijn van der Kwast [stilglog.com](http://www.stilglog.com/wordpress-plugins/count-comments/)
+Count the number of comments by authornames. - Attention! This means, that your commenters have to be registered and logged in to comment! This will not work in weblogs where anonymous comments are allowed! original code by Martijn van der Kwast [stilglog.com](http://www.stilglog.com/wordpress-plugins/count-comments/)
 
 == Installation ==
 
