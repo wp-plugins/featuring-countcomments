@@ -1,7 +1,7 @@
 === Featuring CountComments ===
 Contributors: neoxx
 Donate link: http://www.neotrinity.at/projects/
-Tags: countComments, comments, counting, count
+Tags: countComments, comments, comment, counting, count
 Requires at least: 1.5
 Tested up to: 2.1
 Stable tag: trunk
