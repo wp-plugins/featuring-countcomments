@@ -3,7 +3,7 @@ Contributors: neoxx
 Donate link: http://www.neotrinity.at/projects/
 Tags: countComments, comments, comment, counting, count
 Requires at least: 1.5
-Tested up to: 2.1
+Tested up to: 2.1.3
 Stable tag: trunk
 
 Count the number of comments by authornames
