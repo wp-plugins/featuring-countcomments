@@ -6,7 +6,7 @@ Requires at least: 1.5
 Tested up to: 2.1.3
 Stable tag: trunk
 
-Count the number of comments by authornames
+Counts the number of comments by authornames.
 
 == Description ==
 
