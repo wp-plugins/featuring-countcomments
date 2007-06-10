@@ -34,7 +34,7 @@ Counts the number of comments by authornames. - Attention! This means, that your
 
 4. Add additional function calls anywhere you like.
 
-5. Drink a beer, smoke a cigarette or celebrate in a way you like!
+5. Drink a beer, smoke a cigarette or celebrate in a way you like! (and maybe you want to add a link to http://www.neotrinity.at/projects/)
 
 (Additional) You can use the other functions as well. - please read the documentation in the plugin class (php file) itself.
 
