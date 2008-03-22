@@ -26,7 +26,7 @@ Counts the number of comments by authornames. - Attention! This means, that your
 	Example in comments.php in the Kubrick theme:
 	Find
 
-	`<cite><?php comment_author_link</cite>` Says:
+	`<cite><?php comment_author_link</cite>`
 
 	and add insert this in that line:
 
