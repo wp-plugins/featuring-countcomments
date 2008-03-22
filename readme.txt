@@ -3,7 +3,7 @@ Contributors: neoxx
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=neo%40neotrinity%2eat&item_name=neotrinity%2eat&no_shipping=1&no_note=1&tax=0&currency_code=USD&bn=PP%2dDonationsBF&charset=UTF%2d8
 Tags: countComments, comments, comment, counting, count
 Requires at least: 1.5
-Tested up to: 2.3.3
+Tested up to: 2.5
 Stable tag: trunk
 
 Counts the number of comments by authornames.
@@ -41,39 +41,29 @@ Counts the number of comments by authornames. - Attention! This means, that your
 
 = Functions =
 
-`function fcc_get_comment_count($comment)`
- * Return number of comments made by the author of this comment.
- * parameters:
-     - $comment: current comment structure.
+* `function fcc_get_comment_count($comment)`
+ - Return number of comments made by the author of this comment.
+ - parameters: $comment: current comment structure.
 
-`function fcc_comment_count($zero='0 comments', $one='1 comment', $more='%c comments')`
- * Display the number of comments made by the author of the current comment in the comment loop.
- * parameters:
-     - $comment: current comment structure.
-     - $zero, $one, $more: %c get replaced with the number of comments.
+* `function fcc_comment_count($zero='0 comments', $one='1 comment', $more='%c comments')`
+ - Display the number of comments made by the author of the current comment in the comment loop.
+ - parameters: $zero, $one, $more: %c get replaced with the number of comments.
 
-`function fcc_get_count_comments_author($author)`
- * Get the number of comments made by someone with this name, outside the comment context.
- * parameters:
-     - $author: name of user to count comments for
+* `function fcc_get_count_comments_author($author)`
+ - Get the number of comments made by someone with this name, outside the comment context.
+ - parameters: $author: name of user to count comments for
 
-`function fcc_count_comments_author($zero='0 comments', $one='1 comment', $more='%c comments')`
- * Display the number of comments made by the author of the current comment in the comment loop.
- * parameters:
-     - $comment: current comment structure.
-     - $zero, $one, $more: %c get replaced with the number of comments.
+* `function fcc_count_comments_author($zero='0 comments', $one='1 comment', $more='%c comments')`
+ - Display the number of comments made by the author of the current comment in the comment loop.
+ - parameters: $zero, $one, $more: %c get replaced with the number of comments.
 
-`function fcc_count_comments_by_author($zero='0 comments', $one='1 comment', $more='%c comments', $author)`
- * Display the number of comments made by an specified author
- * parameters:
-     - $comment: current comment structure.
-     - $zero, $one, $more: %c get replaced with the number of comments, $author: the authors nickname
+* `function fcc_count_comments_by_author($zero='0 comments', $one='1 comment', $more='%c comments', $author)`
+ - Display the number of comments made by an specified author
+ - parameters: $zero, $one, $more: %c get replaced with the number of comments, $author: the authors nickname
 
 
 = Remarks =
 
-Author nicknames are used to recognize commenters.
-
-The results are cached to avoid using too many queries to increase performance.
-
-If the number of comments gets really big, it would be better to cache the counts in the database instead of calculating them.
+* Author nicknames are used to recognize commenters.
+* The results are cached to avoid using too many queries to increase performance.
+* If the number of comments gets really big, it would be better to cache the counts in the database instead of calculating them on every pageload.
