@@ -14,7 +14,7 @@ Counts the number of comments by authornames. - Attention! This means, that your
 
 == Installation ==
 
-1. Put both the featuring-count-comments.php file in your WordPress plugins directory (usually wp-content/plugins).
+1. Copy the featuring-countcomments directory in your WordPress plugins directory (usually wp-content/plugins).
 
 2. In the WordPress admin console, go to the Plugins tab, and activate the Featuring CountComments plugin.
 
@@ -42,28 +42,28 @@ Counts the number of comments by authornames. - Attention! This means, that your
 = Functions =
 
 * `function fcc_get_comment_count($comment)`
- - Return number of comments made by the author of this comment.
+ - Returns the number of comments made by the author of this comment.
  - parameters: $comment: current comment structure.
 
 * `function fcc_comment_count($zero='0 comments', $one='1 comment', $more='%c comments')`
- - Display the number of comments made by the author of the current comment in the comment loop.
+ - Displays the number of comments made by the author of the current comment in the comment loop.
  - parameters: $zero, $one, $more: %c get replaced with the number of comments.
 
 * `function fcc_get_count_comments_author($author)`
- - Get the number of comments made by someone with this name, outside the comment context.
+ - Gets the number of comments made by someone with this name, outside the comment context.
  - parameters: $author: name of user to count comments for
 
 * `function fcc_count_comments_author($zero='0 comments', $one='1 comment', $more='%c comments')`
- - Display the number of comments made by the author of the current comment in the comment loop.
+ - Displays the number of comments made by the author of the current comment in the comment loop.
  - parameters: $zero, $one, $more: %c get replaced with the number of comments.
 
 * `function fcc_count_comments_by_author($zero='0 comments', $one='1 comment', $more='%c comments', $author)`
- - Display the number of comments made by an specified author
+ - Displays the number of comments made by an specified author
  - parameters: $zero, $one, $more: %c get replaced with the number of comments, $author: the authors nickname
 
 
 = Remarks =
 
 * Author nicknames are used to recognize commenters.
-* The results are cached to avoid using too many queries to increase performance.
-* If the number of comments gets really big, it would be better to cache the counts in the database instead of calculating them on every pageload.
+* The results are re-used on each single page-call to avoid using too many queries to increase performance.
+* If the number of comments gets really big, it would be better to cache the counts in the database instead of calculating them on every page-call.
