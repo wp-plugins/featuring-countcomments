@@ -10,7 +10,11 @@ Counts the number of comments by authornames.
 
 == Description ==
 
-Counts the number of comments by authornames. - Attention! This means, that your commenters have to be registered and logged in to comment! This will not work in weblogs where anonymous comments are allowed! original code by Martijn van der Kwast [stilglog.com](http://www.stilglog.com/wordpress-plugins/count-comments/)
+Counts the number of comments by authornames.
+
+** Attention! This means, that your commenters have to be registered and logged in to comment! ** It will not work in weblogs where anonymous comments are allowed!
+
+Original code by Martijn van der Kwast [stilglog.com](http://www.stilglog.com/wordpress-plugins/count-comments/).
 
 == Installation ==
 
@@ -18,7 +22,7 @@ Counts the number of comments by authornames. - Attention! This means, that your
 
 2. In the WordPress admin console, go to the Plugins tab, and activate the Featuring CountComments plugin.
 
-3. To display the count to a comment display add this in the comment loop
+3. To display the comment count of a certain author, add this in the comment loop
 
 	(`$comment` must be globally defined).
 	`<?php fcc_comment_count(); ?>`
@@ -28,7 +32,7 @@ Counts the number of comments by authornames. - Attention! This means, that your
 
 	`<cite><?php comment_author_link</cite>`
 
-	and add insert this in that line:
+	and insert this in that line:
 
 	`<?php fcc_comment_count('','(1)','(%c)'); ?>`
 
@@ -46,7 +50,7 @@ Counts the number of comments by authornames. - Attention! This means, that your
  - parameters: $comment: current comment structure.
 
 * `function fcc_comment_count($zero='0 comments', $one='1 comment', $more='%c comments')`
- - Displays the number of comments made by the author of the current comment in the comment loop.
+ - Displays the number of comments made by the author of the current comment in the comment loop based on $comment.
  - parameters: $zero, $one, $more: %c get replaced with the number of comments.
 
 * `function fcc_get_count_comments_author($author)`
@@ -54,16 +58,16 @@ Counts the number of comments by authornames. - Attention! This means, that your
  - parameters: $author: name of user to count comments for
 
 * `function fcc_count_comments_author($zero='0 comments', $one='1 comment', $more='%c comments')`
- - Displays the number of comments made by the author of the current comment in the comment loop.
+ - Displays the number of comments made by the author of the current comment in the comment loop based on $user_identity.
  - parameters: $zero, $one, $more: %c get replaced with the number of comments.
 
 * `function fcc_count_comments_by_author($zero='0 comments', $one='1 comment', $more='%c comments', $author)`
- - Displays the number of comments made by an specified author
+ - Displays the number of comments made by a specified author
  - parameters: $zero, $one, $more: %c get replaced with the number of comments, $author: the authors nickname
 
 
 = Remarks =
 
-* Author nicknames are used to recognize commenters.
-* The results are re-used on each single page-call to avoid using too many queries to increase performance.
+* Authors' nicknames are used to recognize commenters.
+* The results are re-used on each single page-call to avoid using too many queries for increased performance.
 * If the number of comments gets really big, it would be better to cache the counts in the database instead of calculating them on every page-call.
