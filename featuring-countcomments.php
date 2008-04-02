@@ -9,7 +9,7 @@ Version: 0.11
 Author URI: http://www.neotrinity.at
 */
 
-/*  Copyright 2006  Bernhard Riedl  (email : neo@neotrinity.at)
+/*  Copyright 2006-2008  Bernhard Riedl  (email : neo@neotrinity.at)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
