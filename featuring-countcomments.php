@@ -3,7 +3,7 @@
 /*
 Plugin Name: Featuring CountComments
 Plugin URI: http://www.neotrinity.at/projects/
-Description: Counts the number of comments by authornames. - Attention! This means, that your commenters have to be registered and logged in to comment! This will not work in weblogs where everyone can comment! original code by Martijn van der Kwast
+Description: Counts the number of comments by authornames. - Attention! This means, that your commenters have to be registered and logged in to comment! This will not work in weblogs where everyone can comment! original code by Martijn van der Kwast.
 Author: Bernhard Riedl
 Version: 0.11
 Author URI: http://www.neotrinity.at
