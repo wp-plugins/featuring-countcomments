@@ -10,7 +10,7 @@ Counts the number of comments by authornames.
 
 == Description ==
 
-Counts the number of comments by authornames.
+Counts the number of comments by user IDs or author names (display name).
 
 ** Attention! This means, that your commenters have to be registered and logged in to comment! ** It will not work in weblogs where anonymous comments are allowed!
 
@@ -40,34 +40,42 @@ Original code by Martijn van der Kwast.
 
 5. Drink a beer, smoke a cigarette or celebrate in a way you like! (and maybe you want to add a link to [http://www.neotrinity.at/projects/](http://www.neotrinity.at/projects/))
 
-(Additional) You can use the other functions as well. - please read the documentation in the plugin class (php file) itself.
+== Functions ==
 
-
-= Functions =
+= Functions for Post Pages or Comments Sections =
 
 * `function fcc_get_comment_count($comment)`
- - Returns the number of comments made by the author of this comment.
- - parameters: $comment: current comment structure.
+ - Returns the number of comments made by the author of this comment
+ - parameters: $comment: current comment structure
 
 * `function fcc_comment_count($zero='0 comments', $one='1 comment', $more='%c comments')`
- - Displays the number of comments made by the author of the current comment in the comment loop based on $comment.
+ - Displays the number of comments made by the author of the current comment in the comment loop
  - parameters: $zero, $one, $more: %c get replaced with the number of comments.
 
+= Functions for Author Pages =
+
 * `function fcc_get_count_comments_author($author)`
- - Gets the number of comments made by someone with this name, outside the comment context.
+ - Returns the number of comments made by someone with this display name
  - parameters: $author: name of user to count comments for
 
+* `function fcc_get_count_comments_authorID($authorID)`
+ - same as above, but based on ID instead of the author's name
+ - parameters: $authorID: name of user to count comments for
+
 * `function fcc_count_comments_author($zero='0 comments', $one='1 comment', $more='%c comments')`
- - Displays the number of comments made by the author of the current comment in the comment loop based on $user_identity.
+ - Displays the number of comments made by the author who is currently logged in
  - parameters: $zero, $one, $more: %c get replaced with the number of comments.
 
 * `function fcc_count_comments_by_author($zero='0 comments', $one='1 comment', $more='%c comments', $author)`
- - Displays the number of comments made by a specified author
- - parameters: $zero, $one, $more: %c get replaced with the number of comments, $author: the authors nickname
+ - Displays the number of comments made by a specified author with this display name
+ - parameters: $zero, $one, $more: %c get replaced with the number of comments, $author: the authors display name
 
+* `function fcc_count_comments_by_authorID($zero='0 comments', $one='1 comment', $more='%c comments', $authorID)`
+ - same as above, but based on ID instead of the author's name
+ - parameters: $zero, $one, $more: %c get replaced with the number of comments, $authorID: the authors id
 
-= Remarks =
+== Remarks ==
 
-* Authors' nicknames are used to recognize commenters.
-* The results are re-used on each single page-call to avoid using too many queries for increased performance.
-* If the number of comments gets really big, it would be better to cache the counts in the database instead of calculating them on every page-call.
+* Authors' nicknames (display name) and ids can be used to query for commenters. Though, the internal structure is based on the authors' id and will therefore only produce results of comments, which have been written by logged in authors.
+* Already queried results are re-used within a single page-call to avoid using too many queries for increased performance.
+* Nevertheless, if the number of comments gets really big, it would be better to cache the counts in the database instead of calculating them on every page-call.
