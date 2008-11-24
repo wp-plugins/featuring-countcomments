@@ -20,7 +20,7 @@ Original code by Martijn van der Kwast.
 
 1. Copy the `featuring-countcomments` directory into your WordPress plugins directory (usually wp-content/plugins). Hint: With WordPress 2.7 and higher you can conduct this step within your Admin Menu.
 
-2. In the WordPress Admin Menu, go to the Plugins tab, and activate the Featuring CountComments plugin.
+2. In the WordPress Admin Menu go to the Plugins tab and activate the Featuring CountComments plugin.
 
 3. To display the comment count of a certain author, add this in the comment loop
 
