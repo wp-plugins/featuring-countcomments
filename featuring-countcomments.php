@@ -5,7 +5,7 @@ Plugin Name: Featuring CountComments
 Plugin URI: http://www.neotrinity.at/projects/
 Description: Counts the number of comments by user IDs or author names (display name). - Attention! This means, that your commenters have to be registered and logged in to comment! Thus, it will not work in weblogs where anonymous comments are allowed! original code by Martijn van der Kwast
 Author: Bernhard Riedl
-Version: 0.21
+Version: 0.22
 Author URI: http://www.neotrinity.at
 */
 
@@ -26,17 +26,8 @@ Author URI: http://www.neotrinity.at
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-/*
-called from init hook
-*/
-
-function fcc_init() {
-	add_action('admin_head', 'fcc_wp_head');
-	add_action('wp_head', 'fcc_wp_head');
-}
-
 function fcc_wp_head() {
-	echo("<meta name=\"Featuring CountComments\" content=\"0.21\" />\n");
+	echo("<meta name=\"Featuring CountComments\" content=\"0.22\" />\n");
 }
 
 $_fcc_cache=array();
@@ -247,6 +238,7 @@ function fcc_count_comments_by_authorID($zero='0 comments', $one='1 comment', $m
 	}
 }
 
-add_action('init', 'fcc_init');
+add_action('admin_head', 'fcc_wp_head');
+add_action('wp_head', 'fcc_wp_head');
 
 ?>
