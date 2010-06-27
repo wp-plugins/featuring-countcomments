@@ -180,7 +180,7 @@ add_filter('featuring_countcomments_defaults', 'my_featuring_countcomments_defau
 
 `featuring_countcomments_defaults`
 
-In case you want to set the default parameters globally rather than handing them over on every function call, you can add the [filter](http://codex.wordpress.org/Function_Reference/add_filter) `featuring_countcomments_defaults` in for example featuring-countcomments.php or your own customization plugin (recommended).
+In case you want to set the default parameters globally rather than handing them over on every function call, you can add the [filter](http://codex.wordpress.org/Function_Reference/add_filter) `featuring_countcomments_defaults` in for example featuring-countcomments.php or your [own customization plugin](http://codex.wordpress.org/Writing_a_Plugin) (recommended).
 
 Please note that parameters which you hand over to a function call (`$featuring_countcomments->count_by_user` or `$featuring_countcomments->count_by_comment`) will always override the defaults parameters, even if they have been set by a filter or in the admin menu.
 
