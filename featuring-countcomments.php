@@ -4,13 +4,13 @@
 Plugin Name: Featuring CountComments
 Plugin URI: http://www.neotrinity.at/projects/
 Description: Counts the number of comments for each user who has been logged in at the time of commenting.
-Author: Bernhard Riedl
-Version: 1.00
+Author: Dr. Bernhard Riedl
+Version: 1.10
 Author URI: http://www.bernhard.riedl.name/
 */
 
 /*
-Copyright 2006-2010 Bernhard Riedl
+Copyright 2006-2010 Dr. Bernhard Riedl
 
 Inspirations & Proof-Reading 2007-2010
 by Veronika Grascher
@@ -130,6 +130,11 @@ class FeaturingCountComments {
 		'include_user_profile' => false,
 		'user_profile_text' => 'You\'ve already written %c.',
 
+		'include_user_admin' => true,
+
+		'all_users_can_view_other_users_comment_counts' => true,
+		'view_other_users_comment_counts_capability' => 'edit_users',
+
 		'debug_mode' => false,
 
 		'section' => 'dashboard'
@@ -183,6 +188,9 @@ class FeaturingCountComments {
 			'nicename' => 'Administrative Options',
 			'callback' => 'administrative_options',
 			'fields' => array(
+				'include_user_admin' => 'Display comment count on User page in Admin Menu',
+				'all_users_can_view_other_users_comment_counts' => 'All users can view other users comment counts',
+				'view_other_users_comment_counts_capability' => 'Capability to view comment count of other users',
 				'debug_mode' => 'Enable Debug-Mode'
 			)
 		)
@@ -209,9 +217,9 @@ class FeaturingCountComments {
 	*/
 
 	private function register_scripts() {
-		wp_register_script($this->get_prefix().'utils', $this->get_plugin_url().'js/utils.js', array('prototype'), '2.00');
+		wp_register_script($this->get_prefix().'utils', $this->get_plugin_url().'js/utils.js', array('prototype'), '1.00');
 
-		wp_register_script($this->get_prefix().'settings_page', $this->get_plugin_url().'js/settings_page.js', array('prototype', $this->get_prefix().'utils'), '2.00');
+		wp_register_script($this->get_prefix().'settings_page', $this->get_plugin_url().'js/settings_page.js', array('prototype', $this->get_prefix().'utils'), '1.00');
 	}
 
 	/*
@@ -258,6 +266,25 @@ class FeaturingCountComments {
 		*/
 
 		add_action('show_user_profile', array(&$this, 'show_user_profile'));
+		add_action('edit_user_profile', array(&$this, 'show_user_profile'));
+
+		/*
+		user panel in admin-menu
+		*/
+
+		if ($this->get_option('include_user_admin')) {
+			add_filter('manage_users_columns', array(&$this, 'manage_users_columns'));
+			add_filter('manage_users_custom_column', array(&$this, 'manage_users_custom_column'), 10, 3);
+
+			/*
+			we use the hook admin_head instead of
+			admin_print_style because otherwise
+			the style get overwritten by WordPress
+			default settings
+			*/
+
+			add_action('admin_head-users.php', array(&$this, 'add_users_page_css'));
+		}
 
 		/*
 		whitelist settings
@@ -428,6 +455,8 @@ class FeaturingCountComments {
 			'format',
 			'display',
 			'in_loop',
+			'include_user_admin',
+			'all_users_can_view_other_users_comment_counts',
 			'debug_mode'
 		);
 
@@ -451,6 +480,22 @@ class FeaturingCountComments {
 		foreach ($text_fields as $text_field) {
 			if (isset($input[$text_field]) && strlen($input[$text_field])<1)
 				unset($input[$text_field]);
+		}
+
+		/*
+		selected capabilities have to be
+		within available capabilities
+		*/
+
+		$capability_fields=array(
+			'all_user_can_view_other_users_comment_counts'
+		);
+
+		$capabilities=$this->get_all_capabilities();
+
+		foreach ($capability_fields as $capability_field) {
+			if (!in_array($input[$capability_field.'_capability'], $capabilities))
+				unset($input[$capability_field.'_capability']);
 		}
 
 		/*
@@ -693,6 +738,31 @@ class FeaturingCountComments {
 	}
 
 	/*
+	returns all capabilities without 'level_'
+	*/
+
+	private function get_all_capabilities() {
+		$wp_roles=new WP_Roles();
+		$names=$wp_roles->get_names();
+
+		$all_caps=array();
+
+		foreach($names as $name_key => $name) {
+			$wp_role=$wp_roles->get_role($name_key);
+			$role_caps=$wp_role->capabilities;
+
+			foreach($role_caps as $cap_key => $role_cap) {
+				if (!in_array($cap_key, $all_caps) && strpos($cap_key, 'level_')===false)
+					$all_caps[]=$cap_key;
+			}
+		}
+
+		asort($all_caps);
+
+		return $all_caps;
+	}
+
+	/*
 	CALLED BY HOOKS
 	(and therefore public)
 	*/
@@ -736,7 +806,7 @@ class FeaturingCountComments {
 	*/
 
 	function head_meta() {
-		echo("<meta name=\"".$this->get_nicename()."\" content=\"1.00\" />\n");
+		echo("<meta name=\"".$this->get_nicename()."\" content=\"1.10\" />\n");
 	}
 
 	/*
@@ -753,7 +823,7 @@ class FeaturingCountComments {
 	*/
 
 	function dashboard_widget_output() {
-		$this->current_user_string('dashboard_widget');
+		$this->user_string('dashboard_widget');
 	}
 
 	/*
@@ -764,7 +834,7 @@ class FeaturingCountComments {
 		if ($this->get_option('dashboard_right_now')) {
 			echo('<p></p>');
 
-			$this->current_user_string('dashboard_right_now');
+			$this->user_string('dashboard_right_now');
 		}
 	}
 
@@ -772,14 +842,83 @@ class FeaturingCountComments {
 	embed comment count in user profile
 	*/
 
-	function show_user_profile() {
+	function show_user_profile($profileuser) {
 		if ($this->get_option('include_user_profile')) {
 
 			?><h3><?php echo($this->get_nicename()); ?></h3><?php
 
-			$this->current_user_string('user_profile');
+			$this->user_string('user_profile', $profileuser->ID);
 		}
 	}
+
+	/*
+	add additional featuring_countcomments column
+	to User panel in Admin Menu
+	*/
+
+	function manage_users_columns($columns) {
+		$columns[$this->get_prefix(false)]=__('Comments');
+		return $columns;
+	}
+
+	/*
+	return comment-count to display in
+	comments column in Admin Menu's User panel
+	*/
+
+	function manage_users_custom_column($unknown, $column_name, $user_id) {
+
+		if ($column_name==$this->get_prefix(false)) {
+			$unfiltered_params=array(
+				'format' => true,
+				'zero' => '0',
+				'one' => '1',
+				'more' => '%c'
+			);
+
+			$filtered_params=apply_filters($this->get_prefix().'users_custom_column', $unfiltered_params);
+
+			$params=array(
+				'user_attribute' => $user_id,
+				'query_parameter' => 'user_id',
+				'display' => false
+			);
+
+			$count=$this->count_by_user(array_merge($filtered_params, $params));
+
+			$ret_val=$count;
+
+			$user_object = new WP_User((int) $user_id);
+
+			/*
+			include a link to edit-comments
+			search functionality
+
+			maybe someday update to query for
+			user_id instead of display_name
+			https://core.trac.wordpress.org/ticket/14163
+			*/
+
+			if (!empty($count) && !empty($user_object))
+				$ret_val='<a href="'.add_query_arg(array('s' => urlencode($user_object->display_name)), 'edit-comments.php').'" title="search for '.htmlentities($user_object->display_name, ENT_QUOTES, get_option('blog_charset'), false).'">'.$count.'</a>';
+
+			return $ret_val;
+		}
+	}
+
+	/*
+	adds some CSS to format the
+	Featuring CountComments column
+	on users.php
+	*/
+
+	function add_users_page_css() { ?>
+		<style type="text/css">
+			th.column-<?php echo($this->get_prefix(false)); ?>, td.column-<?php echo($this->get_prefix(false)); ?> {
+				text-align:center;
+			}
+		</style>
+	<?php }
 
 	/*
 	called from widget_init hook
@@ -887,12 +1026,30 @@ class FeaturingCountComments {
 
 		$params['user_id']=$this->get_user_id($params);
 
+		global $user_ID;
+
+		/*
+		load current user's details
+		*/
+
+		get_currentuserinfo();
+
+		/*
+		if a user tries to
+		view the comment count of
+		another user, we conduct
+		a security check
+		*/
+
+		if ($params['user_id']!=$user_ID && !$this->get_option('all_users_can_view_other_users_comment_counts') && !current_user_can($this->get_option('view_other_users_comment_counts_capability')))
+			throw new Exception('You are not authorized to view another user\'s comment counts!');
+
 		/*
 		validate user_id
 		*/
 
 		if (!isset($params['user_id']) || !$this->is_integer($params['user_id']) || $params['user_id']<1 || !get_userdata($params['user_id']))
-			throw new Exception('user_id '.$params['user_id'].' does not exist ');
+			throw new Exception('user_id '.$params['user_id'].' does not exist');
 
 		/*
 		retrieve the cached comment-count
@@ -1200,11 +1357,12 @@ class FeaturingCountComments {
 	formatted comment count
 	*/
 
-	private function current_user_string($filter) {
+	private function user_string($filter, $user_id=null) {
 		$filtered_params=apply_filters($this->get_prefix().$filter, array());
 
 		$params=array(
-			'user_parameter' => null,
+			'user_attribute' => $user_id,
+			'query_type' => 'user_id',
 			'format' => true,
 			'display' => false
 		);
@@ -1307,9 +1465,9 @@ class FeaturingCountComments {
 		$default_value=null;
 
 		if ($type=='options')
-			$default_value=htmlentities($this->get_option($field), ENT_QUOTES, get_option('blog_charset'));
+			$default_value=htmlentities($this->get_option($field), ENT_QUOTES, get_option('blog_charset'), false);
 		else if ($type=='defaults')
-			$default_value=htmlentities($this->get_default($field), ENT_QUOTES, get_option('blog_charset'));
+			$default_value=htmlentities($this->get_default($field), ENT_QUOTES, get_option('blog_charset'), false);
 		else
 			throw new Exception('type '.$type.' does not exist for field '.$field.'!');
 
@@ -1494,7 +1652,7 @@ class FeaturingCountComments {
 
 			/* <![CDATA[ */
 
-			Event.observe(window, 'load', function(e){ <?php echo($javascript_toggle.'$(\''.$this->get_prefix().$name.'\')'.$javascript_fields. ', '.($js_checked == 1 ? true : false).');'); ?> });
+			Event.observe(window, 'load', function(e){ <?php echo($javascript_toggle.'$(\''.$this->get_prefix().$name.'\')'.$javascript_fields. ', '.($js_checked == 1 ? '1' : '0').');'); ?> });
 
 			/* ]]> */
 
@@ -1506,7 +1664,7 @@ class FeaturingCountComments {
 			build trigger for settings_field
 			*/
 
-			$javascript_onclick_related_fields='onclick="'.$javascript_toggle.'this'.$javascript_fields. ', '.($js_checked == 1 ? true : false).');"';
+			$javascript_onclick_related_fields='onclick="'.$javascript_toggle.'this'.$javascript_fields. ', '.($js_checked == 1 ? '1' : '0').');"';
 		}
 
 		$checked=$this->get_setting_default_value($name, $type); ?>
@@ -1531,14 +1689,37 @@ class FeaturingCountComments {
 	<?php }
 
 	/*
+	generic capability select
+	*/
+
+	private function setting_capability($name, $type) {
+		?><select <?php echo($this->get_setting_name_and_id($name.'_capability')); ?>>
+
+			<?php
+			$capabilities=$this->get_all_capabilities();
+
+			$ret_val='';
+
+			foreach ($capabilities as $capability) {
+				$_selected = $capability == $this->get_setting_default_value($name.'_capability', $type) ? " selected='selected'" : '';
+				$ret_val.="\t<option value='".$capability."'".$_selected.">" . $capability . "</option>\n";
+			}
+
+			echo $ret_val;
+			?>
+
+		</select><?php
+	}
+
+	/*
 	outputs support paragraph
 	*/
 
 	private function neotrinity_support() { ?>
 		<h3>Support</h3>
-			If you like to support the development of <?php echo($this->get_nicename()); ?>, you can invite my on a virtual pizza for my work. <?php echo(convert_smilies(':)')); ?><br /><br />
+		If you like to support the development of <?php echo($this->get_nicename()); ?>, you can invite me for a <a target="_blank" href="https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&amp;business=bernhard%40riedl%2ename&amp;item_name=Donation%20for%20Featuring%20CountComments&amp;no_shipping=1&amp;no_note=1&amp;tax=0&amp;currency_code=EUR&amp;bn=PP%2dDonationsBF&amp;charset=UTF%2d8">virtual pizza</a> for my work. <?php echo(convert_smilies(':)')); ?><br /><br />
 
-		<form action="https://www.paypal.com/cgi-bin/webscr" method="post"><input type="hidden" name="cmd" value="_xclick" /><input type="hidden" name="business" value="&#110;&#101;&#111;&#64;&#x6E;&#x65;&#x6F;&#x74;&#x72;&#105;&#110;&#x69;&#x74;&#x79;&#x2E;&#x61;t" /><input type="hidden" name="item_name" value="neotrinity.at" /><input type="hidden" name="no_shipping" value="2" /><input type="hidden" name="no_note" value="1" /><input type="hidden" name="currency_code" value="USD" /><input type="hidden" name="tax" value="0" /><input type="hidden" name="bn" value="PP-DonationsBF" /><input type="image" src="https://www.paypal.com/en_US/i/btn/x-click-but04.gif" style="border:0" name="submit" alt="Make payments with PayPal - it's fast, free and secure!" /><img alt="if you like to, you can support me" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" /></form><br />
+		<form action="https://www.paypal.com/cgi-bin/webscr" method="post"><input type="hidden" name="cmd" value="_xclick" /><input type="hidden" name="business" value="&#110;&#101;&#111;&#64;&#x6E;&#x65;&#x6F;&#x74;&#x72;&#105;&#110;&#x69;&#x74;&#x79;&#x2E;&#x61;t" /><input type="hidden" name="item_name" value="Donation for Featuring CountComments" /><input type="hidden" name="no_shipping" value="2" /><input type="hidden" name="no_note" value="1" /><input type="hidden" name="currency_code" value="EUR" /><input type="hidden" name="tax" value="0" /><input type="hidden" name="bn" value="PP-DonationsBF" /><input type="image" src="https://www.paypal.com/en_US/i/btn/x-click-but04.gif" style="border:0" name="submit" alt="Make payments with PayPal - it's fast, free and secure!" /><img alt="If you like to, you can support me." src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" /></form><br />
 
 		Maybe you also want to <?php if (current_user_can('manage_links')) { ?><a href="link-add.php"><?php } ?>add a link<?php if (current_user_can('manage_links')) { ?></a><?php } ?> to <a href="http://www.neotrinity.at/projects/">http://www.neotrinity.at/projects/</a>.<br /><br />
 	<?php }
@@ -1696,10 +1877,28 @@ class FeaturingCountComments {
 	*/
 
 	function callback_settings_administrative_options() { ?>
-		The <em>Debug Mode</em> can be used to have a look on the actions undertaken by <?php echo($this->get_nicename()); ?> and to investigate unexpected behaviour.
+		<ul>
+			<li>If you select <em>Display comment count on User page in Admin Menu</em>, every user's comment count will be displayed on the <a href="users.php">users-page</a>.</li>
+
+			<li>If you want to keep the comment counts as a secret, you can deactivate <em>All users can view other users comment counts</em>. In that case, only users with the <em><a target="_blank" href="http://codex.wordpress.org/Roles_and_Capabilities">Capability</a> to view comment count of other users</em> can access this information.</li>
+
+			<li>The <em>Debug Mode</em> can be used to have a look on the actions undertaken by <?php echo($this->get_nicename()); ?> and to investigate unexpected behaviour.</li>
+		</ul>
 
 		<input type="hidden" <?php echo($this->get_setting_name_and_id('section')); ?> value="<?php echo($this->get_option('section')); ?>" />
 	<?php }
+
+	function setting_include_user_admin($params=array()) {
+		$this->setting_checkfield('include_user_admin', 'options');
+	}
+
+	function setting_all_users_can_view_other_users_comment_counts($params=array()) {
+		$this->setting_checkfield('all_users_can_view_other_users_comment_counts', 'options', array('view_other_users_comment_counts_capability'), false);
+	}
+
+	function setting_view_other_users_comment_counts_capability($params=array()) {
+		$this->setting_capability('view_other_users_comment_counts', 'options');
+	}
 
 	function setting_debug_mode($params=array()) {
 		$this->setting_checkfield('debug_mode', 'options');
@@ -1996,7 +2195,7 @@ class WP_Widget_FeaturingCountComments extends WP_Widget {
 			*/
 
 			$params=array(
-				'user_parameter' => null,
+				'user_attribute' => null,
 				'format' => true,
 				'display' => false
 			);

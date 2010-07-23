@@ -1,9 +1,9 @@
 === Featuring CountComments ===
 Contributors: neoxx
-Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=neo%40neotrinity%2eat&item_name=neotrinity%2eat&no_shipping=1&no_note=1&tax=0&currency_code=USD&bn=PP%2dDonationsBF&charset=UTF%2d8
+Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=bernhard%40riedl%2ename&item_name=Donation%20for%20Featuring%20CountComments&no_shipping=1&no_note=1&tax=0&currency_code=EUR&bn=PP%2dDonationsBF&charset=UTF%2d8
 Tags: count, comment, comments, author, authors, user, users, widget, dashboard, sidebar, shortcode, multisite, multi-site
 Requires at least: 2.8
-Tested up to: 3.0
+Tested up to: 3.1
 Stable tag: trunk
 
 Counts the number of comments for each user, who has been logged in at the time of commenting.
@@ -17,6 +17,7 @@ Counts the number of comments for each user who has been logged in at the time o
 * optionpage-configurable for standard functions
 * easy to integrate (ships with multi/sidebar- and dashboard-widget functionality)
 * possible to integrate in "Right Now" box on the dashboard or on the user's profile page
+* extends information on Users page in Admin Menu with comment counts
 * high performing because user counts are re-used within a page-call
 * fully WP 3.0 multi-site network compatible
 * clean uninstall
@@ -58,6 +59,14 @@ Various user attributes can be used in queries. Though, the internal structure i
 Already queried results are cached within a single page-call to avoid executing too many queries. This results in increased performance.
 
 Moreover, in case of querying the comment count of a certain post's comment, only two SQL statements will be used to retrieve the comment count of all users who contributed to this post.
+
+= If I click on the comment count in the Users page of the Admin Menu I do not receive all comments of the associated user and sometimes comments from other users. - What's wrong? =
+
+Actually, there is nothing wrong. - Featuring CountComments uses the built-in full-text comment search of WordPress.
+
+This search looks, for example, also in the comment content. That is most of the time the reason for additional received comments. If comments do not show up in the comments list, then the user probably changed his display-name.
+
+I've already filed a [ticket](https://core.trac.wordpress.org/ticket/14163) so Featuring CountComments can deliver accurate results in the future.
 
 == Other Notes ==
 
@@ -208,11 +217,17 @@ Receives an array which is used for the user-profile-function call to `$featurin
 
 Receives a string which is used in the user's profile page. `%c` will be replaced by the comment count of the user who is currently logged in.
 
+`featuring_countcomments_users_custom_column`
+
+Receives an array which is used for the users-page-function call to `$featuring_countcomments->count_by_user`. `display` and `format` will automatically be set to true and `user_parameter` to the user-id of each row to retrieve the user's comment count.
+
 == Screenshots ==
 
 1. This screenshot shows the Settings/Featuring CountComments Tab in the Admin Menu.
 
-2. This screenshot shows an example widget output in the sidebar.
+2. This picture shows an example widget output in the sidebar.
+
+3. This screenshot shows the extended users table in the Admin Menu.
 
 == Upgrade Notice ==
 
@@ -222,14 +237,20 @@ All old functions have been deprecated in favor of `$featuring_countcomments->co
 
 == Changelog ==
 
+= 1.10 =
+
+* admins are able to view the users comment-counts in the Admin Menu
+* the access to the user's comment-counts can be restricted
+* corrected a few typos and fixed potential bugs
+
 = 1.00 =
 
 * start Changelog
 * completely reworked API methods and internal structure
 * Security improvements
-* added Admin-Menu
+* added Admin Menu
 * adapted to WordPress `wp_parse_args` function
-* included Admin-Menu and filter to set default values
+* included Admin Menu and filter to set default values
 * added sidebar widget
 * added dashboard widget
 * possible to add in "Right Now" box on dashboard
