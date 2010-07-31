@@ -26,6 +26,7 @@ Requirements for current version:
 
 * Your users have to be registered and logged in to comment - **Thus, Featuring CountComments will not work properly in weblogs where anonymous comments are allowed!**
 * PHP 5 or higher (find the version for PHP 4 [here](http://downloads.wordpress.org/plugin/featuring-countcomments.wordpressminor2.8.zip))
+* You can check your PHP version with the [Health Check](http://wordpress.org/extend/plugins/health-check/) plugin.
 
 Please find the version for WordPress
 
