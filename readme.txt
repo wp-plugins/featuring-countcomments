@@ -224,11 +224,11 @@ Receives an array which is used for the users-page-function call to `$featuring_
 
 == Screenshots ==
 
-1. This screenshot shows the Settings/Featuring CountComments Tab in the Admin Menu.
+1. This screenshot shows the extended users table in the Admin Menu.
 
 2. This picture shows an example widget output in the sidebar.
 
-3. This screenshot shows the extended users table in the Admin Menu.
+3. This screenshot shows the Settings/Featuring CountComments Tab in the Admin Menu.
 
 == Upgrade Notice ==
 
@@ -237,6 +237,10 @@ Receives an array which is used for the users-page-function call to `$featuring_
 All old functions have been deprecated in favor of `$featuring_countcomments->count_by_user()` and `featuring_countcomments->count_by_comment()`.
 
 == Changelog ==
+
+= 1.11 =
+
+* use WordPress style for comment-counts in users table
 
 = 1.10 =
 

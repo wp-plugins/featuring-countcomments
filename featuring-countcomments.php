@@ -5,7 +5,7 @@ Plugin Name: Featuring CountComments
 Plugin URI: http://www.neotrinity.at/projects/
 Description: Counts the number of comments for each user who has been logged in at the time of commenting.
 Author: Dr. Bernhard Riedl
-Version: 1.10
+Version: 1.11
 Author URI: http://www.bernhard.riedl.name/
 */
 
@@ -281,9 +281,11 @@ class FeaturingCountComments {
 			admin_print_style because otherwise
 			the style get overwritten by WordPress
 			default settings
+
+			@todo maybe remove in WP 3.1
 			*/
 
-			add_action('admin_head-users.php', array(&$this, 'add_users_page_css'));
+			//add_action('admin_head-users.php', array(&$this, 'add_users_page_css'));
 		}
 
 		/*
@@ -806,7 +808,7 @@ class FeaturingCountComments {
 	*/
 
 	function head_meta() {
-		echo("<meta name=\"".$this->get_nicename()."\" content=\"1.10\" />\n");
+		echo("<meta name=\"".$this->get_nicename()."\" content=\"1.11\" />\n");
 	}
 
 	/*
@@ -852,12 +854,13 @@ class FeaturingCountComments {
 	}
 
 	/*
-	add additional featuring_countcomments column
+	add additional comments column
 	to User panel in Admin Menu
 	*/
 
 	function manage_users_columns($columns) {
-		$columns[$this->get_prefix(false)]=__('Comments');
+		$columns['comments']='<div class="vers"><img alt="'.__('Comments').'" title="'.__('Comments').'" src="'.esc_url(admin_url('images/comment-grey-bubble.png')).'" /></div>';
+
 		return $columns;
 	}
 
@@ -868,7 +871,7 @@ class FeaturingCountComments {
 
 	function manage_users_custom_column($unknown, $column_name, $user_id) {
 
-		if ($column_name==$this->get_prefix(false)) {
+		if ($column_name=='comments') {
 			$unfiltered_params=array(
 				'format' => true,
 				'zero' => '0',
@@ -886,9 +889,13 @@ class FeaturingCountComments {
 
 			$count=$this->count_by_user(array_merge($filtered_params, $params));
 
-			$ret_val=$count;
+			if (!$this->is_integer($count) || $count<0)
+				return '-';
 
 			$user_object = new WP_User((int) $user_id);
+
+			if (!is_object($user_object) || !$this->is_integer($user_object->ID) || $user_object->ID!=$user_id)
+				return '-';
 
 			/*
 			include a link to edit-comments
@@ -899,8 +906,7 @@ class FeaturingCountComments {
 			https://core.trac.wordpress.org/ticket/14163
 			*/
 
-			if (!empty($count) && !empty($user_object))
-				$ret_val='<a href="'.add_query_arg(array('s' => urlencode($user_object->display_name)), 'edit-comments.php').'" title="search for '.htmlentities($user_object->display_name, ENT_QUOTES, get_option('blog_charset'), false).'">'.$count.'</a>';
+			$ret_val='<div class="post-com-count-wrapper"><a class="post-com-count" href="'.add_query_arg(array('s' => urlencode($user_object->display_name)), admin_url('edit-comments.php')).'" title="'.htmlentities('Comments Search for "'.$user_object->display_name.'"', ENT_QUOTES, get_option('blog_charset'), false).'"><span class="comment-count">'.$count.'</span></a></div>';
 
 			return $ret_val;
 		}
@@ -910,6 +916,8 @@ class FeaturingCountComments {
 	adds some CSS to format the
 	Featuring CountComments column
 	on users.php
+
+	@todo maybe remove in WP 3.1
 	*/
 
 	function add_users_page_css() { ?>
