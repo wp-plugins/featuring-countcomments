@@ -33,6 +33,10 @@ Please find the version for WordPress
 * 2.8 and higher [here](http://downloads.wordpress.org/plugin/featuring-countcomments.zip)
 * minor 2.8 [here](http://downloads.wordpress.org/plugin/featuring-countcomments.wordpressminor2.8.zip)
 
+**Project's website:** [http://www.neotrinity.at/projects/](http://www.neotrinity.at/projects/)
+
+**Authors's website:** [http://www.bernhard.riedl.name/](http://www.bernhard.riedl.name/)
+
 == Installation ==
 
 1. Copy the `featuring-countcomments` directory into your WordPress plugins directory (usually wp-content/plugins). Hint: You can also conduct this step within your Admin Menu.
