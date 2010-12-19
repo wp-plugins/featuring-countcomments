@@ -5,7 +5,7 @@ Plugin Name: Featuring CountComments
 Plugin URI: http://www.neotrinity.at/projects/
 Description: Counts the number of comments for each user who has been logged in at the time of commenting.
 Author: Dr. Bernhard Riedl
-Version: 1.11
+Version: 1.20
 Author URI: http://www.bernhard.riedl.name/
 */
 
@@ -217,9 +217,9 @@ class FeaturingCountComments {
 	*/
 
 	private function register_scripts() {
-		wp_register_script($this->get_prefix().'utils', $this->get_plugin_url().'js/utils.js', array('prototype'), '1.00');
+		wp_register_script($this->get_prefix().'utils', $this->get_plugin_url().'js/utils.js', array('jquery'), '1.20');
 
-		wp_register_script($this->get_prefix().'settings_page', $this->get_plugin_url().'js/settings_page.js', array('prototype', $this->get_prefix().'utils'), '1.00');
+		wp_register_script($this->get_prefix().'settings_page', $this->get_plugin_url().'js/settings_page.js', array('jquery', $this->get_prefix().'utils'), '1.20');
 	}
 
 	/*
@@ -277,15 +277,20 @@ class FeaturingCountComments {
 			add_filter('manage_users_custom_column', array(&$this, 'manage_users_custom_column'), 10, 3);
 
 			/*
+			add some styling
+			for comments column
+			of users page
+
 			we use the hook admin_head instead of
 			admin_print_style because otherwise
-			the style get overwritten by WordPress
+			the style gets overwritten by WordPress
 			default settings
-
-			@todo maybe remove in WP 3.1
 			*/
 
-			//add_action('admin_head-users.php', array(&$this, 'add_users_page_css'));
+			global $wp_version;
+
+			if (version_compare($wp_version, '3.1', '>='))
+				add_action('admin_head-users.php', array(&$this, 'add_users_page_css'));
 		}
 
 		/*
@@ -808,7 +813,7 @@ class FeaturingCountComments {
 	*/
 
 	function head_meta() {
-		echo("<meta name=\"".$this->get_nicename()."\" content=\"1.11\" />\n");
+		echo("<meta name=\"".$this->get_nicename()."\" content=\"1.20\" />\n");
 	}
 
 	/*
@@ -901,12 +906,21 @@ class FeaturingCountComments {
 			include a link to edit-comments
 			search functionality
 
-			maybe someday update to query for
+			since WordPress 3.1 query for
 			user_id instead of display_name
 			https://core.trac.wordpress.org/ticket/14163
 			*/
 
-			$ret_val='<div class="post-com-count-wrapper"><a class="post-com-count" href="'.add_query_arg(array('s' => urlencode($user_object->display_name)), admin_url('edit-comments.php')).'" title="'.htmlentities('Comments Search for "'.$user_object->display_name.'"', ENT_QUOTES, get_option('blog_charset'), false).'"><span class="comment-count">'.$count.'</span></a></div>';
+			$query_arg=array();
+			
+			global $wp_version;
+
+			if (version_compare($wp_version, '3.1', '>='))
+				$query_arg['user_id']=$user_id;
+			else
+				$query_arg['s']=urlencode($user_object->display_name);
+
+			$ret_val='<div class="post-com-count-wrapper"><a class="post-com-count" href="'.add_query_arg($query_arg, admin_url('edit-comments.php')).'" title="'.htmlentities('Comments Search for "'.$user_object->display_name.'"', ENT_QUOTES, get_option('blog_charset'), false).'"><span class="comment-count">'.$count.'</span></a></div>';
 
 			return $ret_val;
 		}
@@ -916,14 +930,13 @@ class FeaturingCountComments {
 	adds some CSS to format the
 	Featuring CountComments column
 	on users.php
-
-	@todo maybe remove in WP 3.1
 	*/
 
 	function add_users_page_css() { ?>
 		<style type="text/css">
-			th.column-<?php echo($this->get_prefix(false)); ?>, td.column-<?php echo($this->get_prefix(false)); ?> {
+			.fixed .column-comments, .fixed .column-comments a {
 				text-align:center;
+				float:none;
 			}
 		</style>
 	<?php }
@@ -1595,7 +1608,7 @@ class FeaturingCountComments {
 	echo(implode(',', $available_sections));
 	?>];
 
-	var section=$('<?php echo($this->get_prefix()); ?>section').value;
+	var section=jQuery('#<?php echo($this->get_prefix()); ?>section').attr('value');
 	if (!section)
 		section='';
 
@@ -1607,7 +1620,7 @@ class FeaturingCountComments {
 	the menu will not be visible
 	*/
 
-	$('<?php echo($this->get_prefix()); ?>menu').style.display="block";
+	jQuery('#<?php echo($this->get_prefix()); ?>menu').css('display', 'block');
 
 	/* ]]> */
 
@@ -1660,7 +1673,7 @@ class FeaturingCountComments {
 
 			/* <![CDATA[ */
 
-			Event.observe(window, 'load', function(e){ <?php echo($javascript_toggle.'$(\''.$this->get_prefix().$name.'\')'.$javascript_fields. ', '.($js_checked == 1 ? '1' : '0').');'); ?> });
+			jQuery(window).load(function(){ <?php echo($javascript_toggle.'document.getElementById(\''.$this->get_prefix().$name.'\')'.$javascript_fields. ', '.($js_checked == 1 ? '1' : '0').');'); ?> });
 
 			/* ]]> */
 

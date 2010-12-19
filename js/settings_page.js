@@ -4,8 +4,8 @@ hide all option-page sections
 
 function featuring_countcomments_hide_sections() {
 	for (var i=0;i<featuring_countcomments_sections.length;i++) {
-			$('featuring_countcomments_'+featuring_countcomments_sections[i]+'_link').className="";
-	$('featuring_countcomments_'+featuring_countcomments_sections[i]).style.display="none";
+			jQuery('#featuring_countcomments_'+featuring_countcomments_sections[i]+'_link').attr('className', '');
+	jQuery('#featuring_countcomments_'+featuring_countcomments_sections[i]).css('display', 'none');
 	}
 }
 
@@ -30,7 +30,7 @@ function featuring_countcomments_open_section(section) {
 	if (my_section.length===0)
 		my_section=featuring_countcomments_sections[0];
 
-	$('featuring_countcomments_'+my_section).style.display="block";
-	$('featuring_countcomments_'+my_section+'_link').className="current";
-	$('featuring_countcomments_section').value=my_section;
+	jQuery('#featuring_countcomments_'+my_section).css('display', 'block');
+	jQuery('#featuring_countcomments_'+my_section+'_link').attr('className', 'current');
+	jQuery('#featuring_countcomments_section').attr('value', my_section);
 }

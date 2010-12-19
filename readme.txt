@@ -3,7 +3,7 @@ Contributors: neoxx
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=bernhard%40riedl%2ename&item_name=Donation%20for%20Featuring%20CountComments&no_shipping=1&no_note=1&tax=0&currency_code=EUR&bn=PP%2dDonationsBF&charset=UTF%2d8
 Tags: count, comment, comments, author, authors, user, users, widget, dashboard, sidebar, shortcode, multisite, multi-site
 Requires at least: 2.8
-Tested up to: 3.1
+Tested up to: 3.2
 Stable tag: trunk
 
 Counts the number of comments for each user, who has been logged in at the time of commenting.
@@ -67,11 +67,9 @@ Moreover, in case of querying the comment count of a certain post's comment, onl
 
 = If I click on the comment count in the Users page of the Admin Menu I do not receive all comments of the associated user and sometimes comments from other users. - What's wrong? =
 
-Actually, there is nothing wrong. - Featuring CountComments uses the built-in full-text comment search of WordPress.
+Actually, there is nothing wrong. - In previous versions, Featuring CountComments used the built-in full-text comment search of WordPress.
 
-This search looks, for example, also in the comment content. That is most of the time the reason for additional received comments. If comments do not show up in the comments list, then the user probably changed his display-name.
-
-I've already filed a [ticket](https://core.trac.wordpress.org/ticket/14163) so Featuring CountComments can deliver accurate results in the future.
+With WordPress >= 3.1 and Featuring CountComments >= 1.20 [the results are queried by user-id instead of display-name](https://core.trac.wordpress.org/ticket/14163).
 
 == Other Notes ==
 
@@ -241,6 +239,12 @@ Receives an array which is used for the users-page-function call to `$featuring_
 All old functions have been deprecated in favor of `$featuring_countcomments->count_by_user()` and `featuring_countcomments->count_by_comment()`.
 
 == Changelog ==
+
+= 1.20 =
+
+* use [new WordPress 3.1 query parameter](https://core.trac.wordpress.org/ticket/14163) to retrieve results for comments in Admin Menu by user-id instead of display-name
+* Changed settings-page JS library to jQuery
+* added CSS for comments column in Users Page of WordPress 3.1 Admin Menu
 
 = 1.11 =
 
