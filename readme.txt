@@ -2,8 +2,8 @@
 Contributors: neoxx
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=bernhard%40riedl%2ename&item_name=Donation%20for%20Featuring%20CountComments&no_shipping=1&no_note=1&tax=0&currency_code=EUR&bn=PP%2dDonationsBF&charset=UTF%2d8
 Tags: count, comment, comments, author, authors, user, users, widget, dashboard, sidebar, shortcode, multisite, multi-site
-Requires at least: 2.8
-Tested up to: 3.2
+Requires at least: 3.2
+Tested up to: 3.3
 Stable tag: trunk
 
 Counts the number of comments for each user, who has been logged in at the time of commenting.
@@ -30,7 +30,8 @@ Requirements for current version:
 
 Please find the version for WordPress
 
-* 2.8 and higher [here](http://downloads.wordpress.org/plugin/featuring-countcomments.zip)
+* 3.2 and higher [here](http://downloads.wordpress.org/plugin/featuring-countcomments.zip)
+* 2.8 to 3.1 [here](http://downloads.wordpress.org/plugin/featuring-countcomments.wordpress2.8-3.1.zip)
 * minor 2.8 [here](http://downloads.wordpress.org/plugin/featuring-countcomments.wordpressminor2.8.zip)
 
 **Plugin's website:** [http://www.neotrinity.at/projects/](http://www.neotrinity.at/projects/)
@@ -234,11 +235,20 @@ Receives an array which is used for the users-page-function call to `$featuring_
 
 == Upgrade Notice ==
 
+= 1.30 =
+
+The minimum requirement is now WordPress 3.2
+
 = 1.00 =
 
 All old functions have been deprecated in favor of `$featuring_countcomments->count_by_user()` and `featuring_countcomments->count_by_comment()`.
 
 == Changelog ==
+
+= 1.30 =
+
+* adoption of JavaScript code for jQuery 1.6.1 (ships with WordPress 3.2 => increased minimum requirement to WordPress 3.2 for this and all upcoming releases)
+* small enhancements
 
 = 1.20 =
 

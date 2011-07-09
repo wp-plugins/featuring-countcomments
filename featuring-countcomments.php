@@ -5,14 +5,14 @@ Plugin Name: Featuring CountComments
 Plugin URI: http://www.neotrinity.at/projects/
 Description: Counts the number of comments for each user who has been logged in at the time of commenting.
 Author: Dr. Bernhard Riedl
-Version: 1.20
+Version: 1.30
 Author URI: http://www.bernhard.riedl.name/
 */
 
 /*
-Copyright 2006-2010 Dr. Bernhard Riedl
+Copyright 2006-2011 Dr. Bernhard Riedl
 
-Inspirations & Proof-Reading 2007-2010
+Inspirations & Proof-Reading 2007-2011
 by Veronika Grascher
 original idea by Martijn van der Kwast
 
@@ -217,9 +217,9 @@ class FeaturingCountComments {
 	*/
 
 	private function register_scripts() {
-		wp_register_script($this->get_prefix().'utils', $this->get_plugin_url().'js/utils.js', array('jquery'), '1.20');
+		wp_register_script($this->get_prefix().'utils', $this->get_plugin_url().'js/utils.js', array('jquery'), '1.30');
 
-		wp_register_script($this->get_prefix().'settings_page', $this->get_plugin_url().'js/settings_page.js', array('jquery', $this->get_prefix().'utils'), '1.20');
+		wp_register_script($this->get_prefix().'settings_page', $this->get_plugin_url().'js/settings_page.js', array('jquery', $this->get_prefix().'utils'), '1.30');
 	}
 
 	/*
@@ -275,22 +275,6 @@ class FeaturingCountComments {
 		if ($this->get_option('include_user_admin')) {
 			add_filter('manage_users_columns', array(&$this, 'manage_users_columns'));
 			add_filter('manage_users_custom_column', array(&$this, 'manage_users_custom_column'), 10, 3);
-
-			/*
-			add some styling
-			for comments column
-			of users page
-
-			we use the hook admin_head instead of
-			admin_print_style because otherwise
-			the style gets overwritten by WordPress
-			default settings
-			*/
-
-			global $wp_version;
-
-			if (version_compare($wp_version, '3.1', '>='))
-				add_action('admin_head-users.php', array(&$this, 'add_users_page_css'));
 		}
 
 		/*
@@ -468,7 +452,7 @@ class FeaturingCountComments {
 		);
 
 		foreach ($check_fields as $check_field) {
-			$input[$check_field] = ($input[$check_field] == 1 ? true : false);
+			$input[$check_field] = (isset($input[$check_field]) && $input[$check_field] == 1 ? true : false);
 		}
 
 		/*
@@ -501,7 +485,7 @@ class FeaturingCountComments {
 		$capabilities=$this->get_all_capabilities();
 
 		foreach ($capability_fields as $capability_field) {
-			if (!in_array($input[$capability_field.'_capability'], $capabilities))
+			if (isset($input[$capability_field.'_capability']) && !in_array($input[$capability_field.'_capability'], $capabilities))
 				unset($input[$capability_field.'_capability']);
 		}
 
@@ -813,7 +797,7 @@ class FeaturingCountComments {
 	*/
 
 	function head_meta() {
-		echo("<meta name=\"".$this->get_nicename()."\" content=\"1.20\" />\n");
+		echo("<meta name=\"".$this->get_nicename()."\" content=\"1.30\" />\n");
 	}
 
 	/*
@@ -915,10 +899,7 @@ class FeaturingCountComments {
 			
 			global $wp_version;
 
-			if (version_compare($wp_version, '3.1', '>='))
-				$query_arg['user_id']=$user_id;
-			else
-				$query_arg['s']=urlencode($user_object->display_name);
+			$query_arg['user_id']=$user_id;
 
 			$ret_val='<div class="post-com-count-wrapper"><a class="post-com-count" href="'.add_query_arg($query_arg, admin_url('edit-comments.php')).'" title="'.htmlentities('Comments Search for "'.$user_object->display_name.'"', ENT_QUOTES, get_option('blog_charset'), false).'"><span class="comment-count">'.$count.'</span></a></div>';
 
@@ -1538,7 +1519,17 @@ class FeaturingCountComments {
 		?>
 		</ul></div>
 
-		<div class="<?php echo($this->get_prefix()); ?>wrap">
+		<div id="<?php echo($this->get_prefix()); ?>content" class="<?php echo($this->get_prefix()); ?>wrap">
+
+		<script type="text/javascript">
+
+		/* <![CDATA[ */
+
+		jQuery('#<?php echo($this->get_prefix()); ?>content').css('display', 'none');
+
+		/* ]]> */
+
+		</script>
 
 		<?php if ($is_wp_options) { ?>
 			<form method="post" action="<?php echo(admin_url('options.php')); ?>">
@@ -1608,19 +1599,21 @@ class FeaturingCountComments {
 	echo(implode(',', $available_sections));
 	?>];
 
-	var section=jQuery('#<?php echo($this->get_prefix()); ?>section').attr('value');
+	var section=jQuery('#<?php echo($this->get_prefix()); ?>section').val();
 	if (!section)
 		section='';
 
 	<?php echo($this->get_prefix()); ?>open_section(section);
 
 	/*
-	display js-menu
+	display js-menu and content-block
 	if js has been disabled,
 	the menu will not be visible
 	*/
 
 	jQuery('#<?php echo($this->get_prefix()); ?>menu').css('display', 'block');
+
+	jQuery('#<?php echo($this->get_prefix()); ?>content').css('display', 'block');
 
 	/* ]]> */
 
@@ -1736,9 +1729,10 @@ class FeaturingCountComments {
 	outputs support paragraph
 	*/
 
-	private function neotrinity_support() { ?>
+	private function neotrinity_support() {
+		global $user_identity; ?>
 		<h3>Support</h3>
-		If you like to support the development of <?php echo($this->get_nicename()); ?>, you can invite me for a <a target="_blank" href="https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&amp;business=bernhard%40riedl%2ename&amp;item_name=Donation%20for%20Featuring%20CountComments&amp;no_shipping=1&amp;no_note=1&amp;tax=0&amp;currency_code=EUR&amp;bn=PP%2dDonationsBF&amp;charset=UTF%2d8">virtual pizza</a> for my work. <?php echo(convert_smilies(':)')); ?><br /><br />
+		<?php echo($user_identity); ?>, if you would like to support the development of <?php echo($this->get_nicename()); ?>, you can invite me for a <a target="_blank" href="https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&amp;business=bernhard%40riedl%2ename&amp;item_name=Donation%20for%20Featuring%20CountComments&amp;no_shipping=1&amp;no_note=1&amp;tax=0&amp;currency_code=EUR&amp;bn=PP%2dDonationsBF&amp;charset=UTF%2d8">virtual pizza</a> for my work. <?php echo(convert_smilies(':)')); ?><br /><br />
 
 		<form action="https://www.paypal.com/cgi-bin/webscr" method="post"><input type="hidden" name="cmd" value="_xclick" /><input type="hidden" name="business" value="&#110;&#101;&#111;&#64;&#x6E;&#x65;&#x6F;&#x74;&#x72;&#105;&#110;&#x69;&#x74;&#x79;&#x2E;&#x61;t" /><input type="hidden" name="item_name" value="Donation for Featuring CountComments" /><input type="hidden" name="no_shipping" value="2" /><input type="hidden" name="no_note" value="1" /><input type="hidden" name="currency_code" value="EUR" /><input type="hidden" name="tax" value="0" /><input type="hidden" name="bn" value="PP-DonationsBF" /><input type="image" src="https://www.paypal.com/en_US/i/btn/x-click-but04.gif" style="border:0" name="submit" alt="Make payments with PayPal - it's fast, free and secure!" /><img alt="If you like to, you can support me." src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" /></form><br />
 
