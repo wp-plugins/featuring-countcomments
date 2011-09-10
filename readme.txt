@@ -19,6 +19,7 @@ Counts the number of comments for each user who has been logged in at the time o
 * possible to integrate in "Right Now" box on the dashboard or on the user's profile page
 * extends information on Users page in Admin Menu with comment counts
 * high performing because user counts are re-used within a page-call
+* fully compatible with [https/SSL/TLS-sites](http://codex.wordpress.org/Administration_Over_SSL)
 * fully WP 3.0 multi-site network compatible
 * clean uninstall
 
