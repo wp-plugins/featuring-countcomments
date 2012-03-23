@@ -3,7 +3,7 @@ Contributors: neoxx
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=bernhard%40riedl%2ename&item_name=Donation%20for%20Featuring%20CountComments&no_shipping=1&no_note=1&tax=0&currency_code=EUR&bn=PP%2dDonationsBF&charset=UTF%2d8
 Tags: count, comment, comments, author, authors, user, users, widget, dashboard, sidebar, shortcode, multisite, multi-site
 Requires at least: 3.2
-Tested up to: 3.3
+Tested up to: 3.4
 Stable tag: trunk
 
 Counts the number of comments for each user, who has been logged in at the time of commenting.
@@ -14,11 +14,11 @@ Counts the number of comments for each user who has been logged in at the time o
 
 **starting from version 1.00 with a new API and widget functionality**
 
+* extends information on Users page in Admin Menu with comment counts
 * optionpage-configurable for standard functions
 * easy to integrate (ships with multi/sidebar- and dashboard-widget functionality)
-* possible to integrate in "Right Now" box on the dashboard or on the user's profile page
-* extends information on Users page in Admin Menu with comment counts
-* high performing because user counts are re-used within a page-call
+* possible to integrate in "Right Now" box or to display as widget on the dashboard and on the user's profile page
+* high performance because users' comment counts are re-used within a page-call
 * fully compatible with [https/SSL/TLS-sites](http://codex.wordpress.org/Administration_Over_SSL)
 * fully WP 3.0 multi-site network compatible
 * clean uninstall
@@ -245,6 +245,12 @@ The minimum requirement is now WordPress 3.2
 All old functions have been deprecated in favor of `$featuring_countcomments->count_by_user()` and `featuring_countcomments->count_by_comment()`.
 
 == Changelog ==
+
+= 1.31 =
+
+* changed handling of contextual help for WordPress 3.3
+* adopted handling of default settings
+* external files are now registered in init-hook
 
 = 1.30 =
 

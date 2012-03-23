@@ -5,14 +5,14 @@ Plugin Name: Featuring CountComments
 Plugin URI: http://www.neotrinity.at/projects/
 Description: Counts the number of comments for each user who has been logged in at the time of commenting.
 Author: Dr. Bernhard Riedl
-Version: 1.30
+Version: 1.31
 Author URI: http://www.bernhard.riedl.name/
 */
 
 /*
-Copyright 2006-2011 Dr. Bernhard Riedl
+Copyright 2006-2012 Dr. Bernhard Riedl
 
-Inspirations & Proof-Reading 2007-2011
+Inspirations & Proof-Reading 2007-2012
 by Veronika Grascher
 original idea by Martijn van der Kwast
 
@@ -189,7 +189,7 @@ class FeaturingCountComments {
 			'callback' => 'administrative_options',
 			'fields' => array(
 				'include_user_admin' => 'Display comment count on User page in Admin Menu',
-				'all_users_can_view_other_users_comment_counts' => 'All users can view other users comment counts',
+				'all_users_can_view_other_users_comment_counts' => 'All users can view other users\' comment counts',
 				'view_other_users_comment_counts_capability' => 'Capability to view comment count of other users',
 				'debug_mode' => 'Enable Debug-Mode'
 			)
@@ -208,7 +208,6 @@ class FeaturingCountComments {
 
 		$this->set_plugin_url();
 		$this->retrieve_settings();
-		$this->register_scripts();
 		$this->register_hooks();
 	}
 
@@ -216,7 +215,7 @@ class FeaturingCountComments {
 	register js libraries
 	*/
 
-	private function register_scripts() {
+	function register_scripts() {
 		wp_register_script($this->get_prefix().'utils', $this->get_plugin_url().'js/utils.js', array('jquery'), '1.30');
 
 		wp_register_script($this->get_prefix().'settings_page', $this->get_plugin_url().'js/settings_page.js', array('jquery', $this->get_prefix().'utils'), '1.30');
@@ -227,6 +226,12 @@ class FeaturingCountComments {
 	*/
 
 	private function register_hooks() {
+
+		/*
+		register externals
+		*/
+
+		add_action('init', array(&$this, 'register_scripts'));
 
 		/*
 		general
@@ -383,13 +388,22 @@ class FeaturingCountComments {
 		}
 
 		/*
-		for some strange reason,
-		WordPress doesn't like to
-		write to an empty option
+		we intentionally write
+		the fallbacks in the
+		database to activate
+		built-in caching
+		and repair a broken
+		settings-array
 		*/
 
 		else {
-			update_option($this->get_prefix(false), array());
+			update_option(
+				$this->get_prefix(false),
+				array(
+					'defaults' => $this->fallback_defaults,
+					'options' => $this->fallback_options
+				)
+			);
 		}
 
 		/*
@@ -436,7 +450,8 @@ class FeaturingCountComments {
 		}
 
 		/*
-		check-fields are either 0 or 1
+		check-fields will be
+		converted to true/false
 		*/
 
 		$check_fields=array(
@@ -452,7 +467,7 @@ class FeaturingCountComments {
 		);
 
 		foreach ($check_fields as $check_field) {
-			$input[$check_field] = (isset($input[$check_field]) && $input[$check_field] == 1 ? true : false);
+			$input[$check_field] = (isset($input[$check_field]) && $input[$check_field] == 1) ? true : false;
 		}
 
 		/*
@@ -767,6 +782,14 @@ class FeaturingCountComments {
 	}
 
 	/*
+	Options Page Help Tab
+	*/
+
+	function options_page_help_tab() {
+		$this->add_help_tab($this->options_page_help());
+	}
+
+	/*
 	white list options
 	*/
 
@@ -789,7 +812,7 @@ class FeaturingCountComments {
 
 		add_action('admin_print_scripts-'.$options_page, array(&$this, 'settings_print_scripts'));
 		add_action('admin_head-'.$options_page, array(&$this, 'admin_styles'));
-		add_contextual_help($options_page, $this->options_page_help());
+		add_action('load-'.$options_page, array(&$this, 'options_page_help_tab'));
 	}
 
 	/*
@@ -797,7 +820,7 @@ class FeaturingCountComments {
 	*/
 
 	function head_meta() {
-		echo("<meta name=\"".$this->get_nicename()."\" content=\"1.30\" />\n");
+		echo("<meta name=\"".$this->get_nicename()."\" content=\"1.31\" />\n");
 	}
 
 	/*
@@ -1276,7 +1299,7 @@ class FeaturingCountComments {
 		*/
 
 		if (!isset($this->cache[$user_id])) {
-			$this->log('cache user count for user_id '.$user_id);
+			$this->log('cache user comment count for user_id '.$user_id);
 
 			$q = "SELECT COUNT($wpdb->comments.comment_ID) FROM $wpdb->comments WHERE $wpdb->comments.comment_approved = '1' AND $wpdb->comments.user_id = $user_id";
 
@@ -1482,6 +1505,35 @@ class FeaturingCountComments {
 
 	private function do_settings_sections($section_key, $section_prefix) {
 		do_settings_sections($this->get_prefix().$section_prefix.'_'.$section_key);
+	}
+
+	/*
+	handles adding a help-tab
+	*/
+
+	private function add_help_tab($help_text) {
+		$current_screen=get_current_screen();
+
+		/*
+		WP >= 3.0
+		*/
+
+		if (!method_exists($current_screen, 'add_help_tab'))
+			add_contextual_help($current_screen, $help_text);
+
+		/*
+		WP >= 3.3
+		*/
+
+		else {
+			$help_options=array(
+				'id' => $this->get_prefix(),
+				'title' => $this->get_nicename(),
+				'content' => $help_text
+			);
+
+			$current_screen->add_help_tab($help_options);
+		}
 	}
 
 	/*
@@ -1830,7 +1882,7 @@ class FeaturingCountComments {
 
 		<ul>
 
-			<li>You can select the default <em>Query Type</em> and whether you want to <em>Display</em> the results.</li>
+			<li>You can select the default <em>Query Type</em> and whether you want to <em>Display</em> the <em>Results</em>.</li>
 
 			<li>If you select to <em>Format</em> the results, you can choose how the formatted string should look like in the fields <em>Text 0 comments</em>, <em>Text 1 comments</em> and <em>Text more comments</em>. <em>%c</em> will be replaced with the user's comment count. Moreover you can choose the format of the <em>Thousands Separator</em>.</li>
 
@@ -1895,7 +1947,7 @@ class FeaturingCountComments {
 		<ul>
 			<li>If you select <em>Display comment count on User page in Admin Menu</em>, every user's comment count will be displayed on the <a href="users.php">users-page</a>.</li>
 
-			<li>If you want to keep the comment counts as a secret, you can deactivate <em>All users can view other users comment counts</em>. In that case, only users with the <em><a target="_blank" href="http://codex.wordpress.org/Roles_and_Capabilities">Capability</a> to view comment count of other users</em> can access this information.</li>
+			<li>If you want to keep the comment counts as a secret, you can deactivate <em>All users can view other users' comment counts</em>. In that case, only users with the <em><a target="_blank" href="http://codex.wordpress.org/Roles_and_Capabilities">Capability</a> to view comment count of other users</em> can access this information.</li>
 
 			<li>The <em>Debug Mode</em> can be used to have a look on the actions undertaken by <?php echo($this->get_nicename()); ?> and to investigate unexpected behaviour.</li>
 		</ul>
