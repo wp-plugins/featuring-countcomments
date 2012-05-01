@@ -5,6 +5,8 @@ Tags: count, comment, comments, author, authors, user, users, widget, dashboard,
 Requires at least: 3.2
 Tested up to: 3.4
 Stable tag: trunk
+License: GPLv3 or later
+License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
 Counts the number of comments for each user, who has been logged in at the time of commenting.
 
