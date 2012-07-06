@@ -2,11 +2,11 @@
 
 /*
 Plugin Name: Featuring CountComments
-Plugin URI: http://www.neotrinity.at/projects/
+Plugin URI: http://www.bernhard-riedl.com/projects/
 Description: Counts the number of comments for each user who has been logged in at the time of commenting.
 Author: Dr. Bernhard Riedl
-Version: 1.31
-Author URI: http://www.bernhard.riedl.name/
+Version: 1.32
+Author URI: http://www.bernhard-riedl.com/
 */
 
 /*
@@ -820,7 +820,7 @@ class FeaturingCountComments {
 	*/
 
 	function head_meta() {
-		echo("<meta name=\"".$this->get_nicename()."\" content=\"1.31\" />\n");
+		echo("<meta name=\"".$this->get_nicename()."\" content=\"1.32\" />\n");
 	}
 
 	/*
@@ -1603,7 +1603,7 @@ class FeaturingCountComments {
 			<?php
 			$submit_buttons=array(
 				'submit' => 'Save Changes',
-				'reset' => 'Use Defaults'
+				'reset' => 'Default'
 			);
 
 			foreach ($submit_buttons as $key => $submit_button)
@@ -1613,7 +1613,7 @@ class FeaturingCountComments {
 			</form>
 		<?php } ?>
 
-		<?php $this->neotrinity_support(); ?>
+		<?php $this->support(); ?>
 
 		</div>
 
@@ -1781,14 +1781,14 @@ class FeaturingCountComments {
 	outputs support paragraph
 	*/
 
-	private function neotrinity_support() {
+	private function support() {
 		global $user_identity; ?>
 		<h3>Support</h3>
-		<?php echo($user_identity); ?>, if you would like to support the development of <?php echo($this->get_nicename()); ?>, you can invite me for a <a target="_blank" href="https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&amp;business=bernhard%40riedl%2ename&amp;item_name=Donation%20for%20Featuring%20CountComments&amp;no_shipping=1&amp;no_note=1&amp;tax=0&amp;currency_code=EUR&amp;bn=PP%2dDonationsBF&amp;charset=UTF%2d8">virtual pizza</a> for my work. <?php echo(convert_smilies(':)')); ?><br /><br />
+		<?php echo($user_identity); ?>, if you would like to support the development of <?php echo($this->get_nicename()); ?>, you can invite me for a <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=NF3C4TNWWM77W">virtual pizza</a> for my work. <?php echo(convert_smilies(':)')); ?><br /><br />
 
-		<form action="https://www.paypal.com/cgi-bin/webscr" method="post"><input type="hidden" name="cmd" value="_xclick" /><input type="hidden" name="business" value="&#110;&#101;&#111;&#64;&#x6E;&#x65;&#x6F;&#x74;&#x72;&#105;&#110;&#x69;&#x74;&#x79;&#x2E;&#x61;t" /><input type="hidden" name="item_name" value="Donation for Featuring CountComments" /><input type="hidden" name="no_shipping" value="2" /><input type="hidden" name="no_note" value="1" /><input type="hidden" name="currency_code" value="EUR" /><input type="hidden" name="tax" value="0" /><input type="hidden" name="bn" value="PP-DonationsBF" /><input type="image" src="https://www.paypal.com/en_US/i/btn/x-click-but04.gif" style="border:0" name="submit" alt="Make payments with PayPal - it's fast, free and secure!" /><img alt="If you like to, you can support me." src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" /></form><br />
+		<form action="https://www.paypal.com/cgi-bin/webscr" method="post"><input type="hidden" name="cmd" value="_s-xclick"><input type="hidden" name="hosted_button_id" value="NF3C4TNWWM77W"><input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" style="border:0" name="submit" alt="PayPal - The safer, easier way to pay online!"><img alt="" style="border:0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1"></form><br />
 
-		Maybe you also want to <?php if (current_user_can('manage_links')) { ?><a href="link-add.php"><?php } ?>add a link<?php if (current_user_can('manage_links')) { ?></a><?php } ?> to <a href="http://www.neotrinity.at/projects/">http://www.neotrinity.at/projects/</a>.<br /><br />
+		Maybe you also want to <?php if (current_user_can('manage_links')) { ?><a href="link-add.php"><?php } ?>add a link<?php if (current_user_can('manage_links')) { ?></a><?php } ?> to <a target="_blank" href="http://www.bernhard-riedl.com/projects/">http://www.bernhard-riedl.com/projects/</a>.<br /><br />
 	<?php }
 
 	/*
@@ -1800,7 +1800,7 @@ class FeaturingCountComments {
 	*/
 
 	function callback_settings_intro() {
-		$this->check_registration_status(); ?>	Welcome to the Settings-Page of <a target="_blank" href="http://www.neotrinity.at/projects/"><?php echo($this->get_nicename()); ?></a>. This plugin counts the number of comments for each user who has been logged in at the time of commenting.
+		$this->check_registration_status(); ?>	Welcome to the Settings-Page of <a target="_blank" href="http://www.bernhard-riedl.com/projects/"><?php echo($this->get_nicename()); ?></a>. This plugin counts the number of comments for each user who has been logged in at the time of commenting.
 	<?php }
 
 	/*
