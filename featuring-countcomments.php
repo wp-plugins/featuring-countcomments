@@ -5,14 +5,14 @@ Plugin Name: Featuring CountComments
 Plugin URI: http://www.bernhard-riedl.com/projects/
 Description: Counts the number of comments for each user who has been logged in at the time of commenting.
 Author: Dr. Bernhard Riedl
-Version: 1.32
+Version: 1.33
 Author URI: http://www.bernhard-riedl.com/
 */
 
 /*
-Copyright 2006-2012 Dr. Bernhard Riedl
+Copyright 2006-2013 Dr. Bernhard Riedl
 
-Inspirations & Proof-Reading 2007-2012
+Inspirations & Proof-Reading 2007-2013
 by Veronika Grascher
 original idea by Martijn van der Kwast
 
@@ -820,7 +820,7 @@ class FeaturingCountComments {
 	*/
 
 	function head_meta() {
-		echo("<meta name=\"".$this->get_nicename()."\" content=\"1.32\" />\n");
+		echo("<meta name=\"".$this->get_nicename()."\" content=\"1.33\" />\n");
 	}
 
 	/*
@@ -1788,7 +1788,7 @@ class FeaturingCountComments {
 
 		<form action="https://www.paypal.com/cgi-bin/webscr" method="post"><input type="hidden" name="cmd" value="_s-xclick"><input type="hidden" name="hosted_button_id" value="NF3C4TNWWM77W"><input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" style="border:0" name="submit" alt="PayPal - The safer, easier way to pay online!"><img alt="" style="border:0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1"></form><br />
 
-		Maybe you also want to <?php if (current_user_can('manage_links')) { ?><a href="link-add.php"><?php } ?>add a link<?php if (current_user_can('manage_links')) { ?></a><?php } ?> to <a target="_blank" href="http://www.bernhard-riedl.com/projects/">http://www.bernhard-riedl.com/projects/</a>.<br /><br />
+		Maybe you also want to <?php if (current_user_can('manage_links') && ((!has_filter('default_option_link_manager_enabled') || get_option( 'link_manager_enabled')))) { ?><a href="link-add.php"><?php } ?>add a link<?php if (current_user_can('manage_links') && ((!has_filter('default_option_link_manager_enabled') || get_option( 'link_manager_enabled')))) { ?></a><?php } ?> to <a target="_blank" href="http://www.bernhard-riedl.com/projects/">http://www.bernhard-riedl.com/projects/</a>.<br /><br />
 	<?php }
 
 	/*
