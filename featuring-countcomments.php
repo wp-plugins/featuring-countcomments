@@ -5,7 +5,7 @@ Plugin Name: Featuring CountComments
 Plugin URI: http://www.bernhard-riedl.com/projects/
 Description: Counts the number of comments for each user who has been logged in at the time of commenting.
 Author: Dr. Bernhard Riedl
-Version: 1.33
+Version: 1.40
 Author URI: http://www.bernhard-riedl.com/
 */
 
@@ -231,62 +231,62 @@ class FeaturingCountComments {
 		register externals
 		*/
 
-		add_action('init', array(&$this, 'register_scripts'));
+		add_action('init', array($this, 'register_scripts'));
 
 		/*
 		general
 		*/
 
-		add_filter('plugin_action_links', array(&$this, 'plugin_action_links'), 10, 2);
+		add_filter('plugin_action_links', array($this, 'plugin_action_links'), 10, 2);
 
-		add_action('admin_menu', array(&$this, 'admin_menu'));
+		add_action('admin_menu', array($this, 'admin_menu'));
 
 		/*
 		meta-data
 		*/
 
-		add_action('wp_head', array(&$this, 'head_meta'));
-		add_action('admin_head', array(&$this, 'head_meta'));
+		add_action('wp_head', array($this, 'head_meta'));
+		add_action('admin_head', array($this, 'head_meta'));
 
 		/*
 		widgets
 		*/
 
-		add_action('widgets_init', array(&$this, 'widgets_init'));
+		add_action('widgets_init', array($this, 'widgets_init'));
 
-		add_action('wp_dashboard_setup', array(&$this, 'add_dashboard_widget'));
+		add_action('wp_dashboard_setup', array($this, 'add_dashboard_widget'));
 
-		add_action('activity_box_end', array(&$this, 'add_right_now_box'));
+		add_action('activity_box_end', array($this, 'add_right_now_box'));
 
 		/*
 		shortcodes
 		*/
 
-		add_shortcode($this->get_prefix().'count_by_user', array(&$this, 'shortcode_count_by_user'));
+		add_shortcode($this->get_prefix().'count_by_user', array($this, 'shortcode_count_by_user'));
 
-		add_shortcode($this->get_prefix().'count_by_comment', array(&$this, 'shortcode_count_by_comment'));
+		add_shortcode($this->get_prefix().'count_by_comment', array($this, 'shortcode_count_by_comment'));
 
 		/*
 		profile_page
 		*/
 
-		add_action('show_user_profile', array(&$this, 'show_user_profile'));
-		add_action('edit_user_profile', array(&$this, 'show_user_profile'));
+		add_action('show_user_profile', array($this, 'show_user_profile'));
+		add_action('edit_user_profile', array($this, 'show_user_profile'));
 
 		/*
 		user panel in admin-menu
 		*/
 
 		if ($this->get_option('include_user_admin')) {
-			add_filter('manage_users_columns', array(&$this, 'manage_users_columns'));
-			add_filter('manage_users_custom_column', array(&$this, 'manage_users_custom_column'), 10, 3);
+			add_filter('manage_users_columns', array($this, 'manage_users_columns'));
+			add_filter('manage_users_custom_column', array($this, 'manage_users_custom_column'), 10, 3);
 		}
 
 		/*
 		whitelist settings
 		*/
 
-		add_action('admin_init', array(&$this, 'admin_init'));
+		add_action('admin_init', array($this, 'admin_init'));
 	}
 
 	/*
@@ -736,14 +736,6 @@ class FeaturingCountComments {
 	}
 
 	/*
-	warns about deprecated functions
-	*/
-
-	function deprecated_function($function, $version, $replacement) {
-		$this->log(sprintf( __('%1$s is <strong>deprecated</strong> since '.$this->get_nicename().' version %2$s! Use <strong>$'.$this->get_prefix(false).'->%3$s()</strong> instead.'), $function, $version, $replacement), -2);
-	}
-
-	/*
 	returns all capabilities without 'level_'
 	*/
 
@@ -794,7 +786,7 @@ class FeaturingCountComments {
 	*/
 
 	function admin_init() {
-		register_setting($this->get_prefix(false), $this->get_prefix(false), array(&$this, 'settings_validate'));
+		register_setting($this->get_prefix(false), $this->get_prefix(false), array($this, 'settings_validate'));
 
 		$this->add_settings_sections($this->options_page_sections, 'settings');
 	}
@@ -808,11 +800,11 @@ class FeaturingCountComments {
 	*/
 
 	function admin_menu() {
-		$options_page=add_options_page($this->get_nicename(), $this->get_nicename(), 'manage_options', $this->get_prefix(false), array(&$this, 'options_page'));
+		$options_page=add_options_page($this->get_nicename(), $this->get_nicename(), 'manage_options', $this->get_prefix(false), array($this, 'options_page'));
 
-		add_action('admin_print_scripts-'.$options_page, array(&$this, 'settings_print_scripts'));
-		add_action('admin_head-'.$options_page, array(&$this, 'admin_styles'));
-		add_action('load-'.$options_page, array(&$this, 'options_page_help_tab'));
+		add_action('admin_print_scripts-'.$options_page, array($this, 'settings_print_scripts'));
+		add_action('admin_head-'.$options_page, array($this, 'admin_styles'));
+		add_action('load-'.$options_page, array($this, 'options_page_help_tab'));
 	}
 
 	/*
@@ -820,7 +812,7 @@ class FeaturingCountComments {
 	*/
 
 	function head_meta() {
-		echo("<meta name=\"".$this->get_nicename()."\" content=\"1.33\" />\n");
+		echo("<meta name=\"".$this->get_nicename()."\" content=\"1.40\" />\n");
 	}
 
 	/*
@@ -829,7 +821,7 @@ class FeaturingCountComments {
 
 	function add_dashboard_widget() {
 		if ($this->get_option('dashboard_widget'))
-			wp_add_dashboard_widget($this->get_prefix().'dashboard_widget', $this->get_nicename(), array(&$this, 'dashboard_widget_output'));
+			wp_add_dashboard_widget($this->get_prefix().'dashboard_widget', $this->get_nicename(), array($this, 'dashboard_widget_output'));
 	}
 
 	/*
@@ -1443,7 +1435,7 @@ class FeaturingCountComments {
 	*/
 
 	private function add_settings_section($section_key, $section_name, $section_prefix, $callback) {
-		add_settings_section('default', $section_name, array(&$this, 'callback_'.$section_prefix.'_'.$callback), $this->get_prefix().$section_prefix.'_'.$section_key);
+		add_settings_section('default', $section_name, array($this, 'callback_'.$section_prefix.'_'.$callback), $this->get_prefix().$section_prefix.'_'.$section_key);
 	}
 
 	/*
@@ -1454,7 +1446,7 @@ class FeaturingCountComments {
 		if (empty($label_for))
 			$label_for=$this->get_prefix().$field_key;
 
-		add_settings_field($this->get_prefix().$field_key, $field_name, array(&$this, 'setting_'.$field_key), $this->get_prefix().$section_prefix.'_'.$section_key, 'default', array('label_for' => $label_for));
+		add_settings_field($this->get_prefix().$field_key, $field_name, array($this, 'setting_'.$field_key), $this->get_prefix().$section_prefix.'_'.$section_key, 'default', array('label_for' => $label_for));
 	}
 
 	/*
@@ -1514,26 +1506,13 @@ class FeaturingCountComments {
 	private function add_help_tab($help_text) {
 		$current_screen=get_current_screen();
 
-		/*
-		WP >= 3.0
-		*/
+		$help_options=array(
+			'id' => $this->get_prefix(),
+			'title' => $this->get_nicename(),
+			'content' => $help_text
+		);
 
-		if (!method_exists($current_screen, 'add_help_tab'))
-			add_contextual_help($current_screen, $help_text);
-
-		/*
-		WP >= 3.3
-		*/
-
-		else {
-			$help_options=array(
-				'id' => $this->get_prefix(),
-				'title' => $this->get_nicename(),
-				'content' => $help_text
-			);
-
-			$current_screen->add_help_tab($help_options);
-		}
+		$current_screen->add_help_tab($help_options);
 	}
 
 	/*
@@ -1557,7 +1536,7 @@ class FeaturingCountComments {
 		<?php if (function_exists('screen_icon')) screen_icon(); ?>
 		<h2><?php echo($this->get_nicename()); ?></h2>
 
-		<?php call_user_func(array(&$this, 'callback_'.$section_prefix.'_intro')); ?>
+		<?php call_user_func(array($this, 'callback_'.$section_prefix.'_intro')); ?>
 
 		<div id="<?php echo($this->get_prefix()); ?>menu" style="display:none"><ul class="subsubsub <?php echo($this->get_prefix(false)); ?>">
 		<?php
@@ -1584,7 +1563,7 @@ class FeaturingCountComments {
 		</script>
 
 		<?php if ($is_wp_options) { ?>
-			<form method="post" action="<?php echo(admin_url('options.php')); ?>">
+			<form id="<?php echo($this->get_prefix().'form_settings'); ?>" method="post" action="<?php echo(admin_url('options.php')); ?>">
 			<?php settings_fields($this->get_prefix(false));
 		}
 
@@ -1641,7 +1620,7 @@ class FeaturingCountComments {
 	section-divs
 	*/
 
-	var <?php echo($this->get_prefix()); ?>sections = [<?php
+	var <?php echo($this->get_prefix()); ?>sections=[<?php
 
 	$available_sections=array();
 
@@ -1651,21 +1630,24 @@ class FeaturingCountComments {
 	echo(implode(',', $available_sections));
 	?>];
 
-	var section=jQuery('#<?php echo($this->get_prefix()); ?>section').val();
-	if (!section)
-		section='';
-
-	<?php echo($this->get_prefix()); ?>open_section(section);
-
 	/*
 	display js-menu and content-block
 	if js has been disabled,
 	the menu will not be visible
 	*/
 
-	jQuery('#<?php echo($this->get_prefix()); ?>menu').css('display', 'block');
+	jQuery(document).ready(function() {
+		var section=jQuery('#<?php echo($this->get_prefix()); ?>section').val();
 
-	jQuery('#<?php echo($this->get_prefix()); ?>content').css('display', 'block');
+		if (!section)
+			section='';
+
+		<?php echo($this->get_prefix()); ?>open_section(section);
+
+		jQuery('#<?php echo($this->get_prefix()); ?>menu').css('display', 'block');
+		jQuery('#<?php echo($this->get_prefix()); ?>content').css('display', 'block');
+
+	});
 
 	/* ]]> */
 
@@ -1709,7 +1691,7 @@ class FeaturingCountComments {
 
 			/*
 			check for disabled fields
-			on onload event
+			on document ready
 			*/
 
 			?>
@@ -1718,7 +1700,7 @@ class FeaturingCountComments {
 
 			/* <![CDATA[ */
 
-			jQuery(window).load(function(){ <?php echo($javascript_toggle.'document.getElementById(\''.$this->get_prefix().$name.'\')'.$javascript_fields. ', '.($js_checked == 1 ? '1' : '0').');'); ?> });
+			jQuery(document).ready(function() { <?php echo($javascript_toggle.'jQuery(\'#'.$this->get_prefix().$name.'\')'.$javascript_fields. ', '.($js_checked == 1 ? '1' : '0').');'); ?> });
 
 			/* ]]> */
 
@@ -1730,7 +1712,7 @@ class FeaturingCountComments {
 			build trigger for settings_field
 			*/
 
-			$javascript_onclick_related_fields='onclick="'.$javascript_toggle.'this'.$javascript_fields. ', '.($js_checked == 1 ? '1' : '0').');"';
+			$javascript_onclick_related_fields='onclick="'.$javascript_toggle.'jQuery(this)'.$javascript_fields. ', '.($js_checked == 1 ? '1' : '0').');"';
 		}
 
 		$checked=$this->get_setting_default_value($name, $type); ?>
@@ -1784,9 +1766,9 @@ class FeaturingCountComments {
 	private function support() {
 		global $user_identity; ?>
 		<h3>Support</h3>
-		<?php echo($user_identity); ?>, if you would like to support the development of <?php echo($this->get_nicename()); ?>, you can invite me for a <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=NF3C4TNWWM77W">virtual pizza</a> for my work. <?php echo(convert_smilies(':)')); ?><br /><br />
+		<?php echo($user_identity); ?>, if you would like to support the development of <?php echo($this->get_nicename()); ?>, you can invite me for a <a target="_blank" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=NF3C4TNWWM77W">virtual pizza</a> for my work. <?php echo(convert_smilies(':)')); ?><br /><br />
 
-		<form action="https://www.paypal.com/cgi-bin/webscr" method="post"><input type="hidden" name="cmd" value="_s-xclick"><input type="hidden" name="hosted_button_id" value="NF3C4TNWWM77W"><input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" style="border:0" name="submit" alt="PayPal - The safer, easier way to pay online!"><img alt="" style="border:0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1"></form><br />
+		<a target="_blank" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=NF3C4TNWWM77W"><img src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" alt="Donate to <?php echo($this->get_nicename()); ?>" /></a><br /><br />
 
 		Maybe you also want to <?php if (current_user_can('manage_links') && ((!has_filter('default_option_link_manager_enabled') || get_option( 'link_manager_enabled')))) { ?><a href="link-add.php"><?php } ?>add a link<?php if (current_user_can('manage_links') && ((!has_filter('default_option_link_manager_enabled') || get_option( 'link_manager_enabled')))) { ?></a><?php } ?> to <a target="_blank" href="http://www.bernhard-riedl.com/projects/">http://www.bernhard-riedl.com/projects/</a>.<br /><br />
 	<?php }
@@ -1823,15 +1805,14 @@ class FeaturingCountComments {
 
 			<li>You can display the comment count of the user who is currently logged in, by adding a <a href=\"widgets.php\">Sidebar Widget</a>, enabling the ".$this->get_section_link($this->options_page_sections, 'dashboard', 'Dashboard Widget')." or displaying it on the ".$this->get_section_link($this->options_page_sections, 'user_profile', 'user\'s profile page').".</li>
 
-			<li><a target=\"_blank\" href=\"http://wordpress.org/extend/plugins/featuring-countcomments/other_notes/\">Geek stuff</a>: You can output the comment counts of your users by calling the <abbr title=\"PHP: Hypertext Preprocessor\">PHP</abbr> function <code>$".$this->get_prefix(false)."->count_by_user(\$params)</code> or <code>$".$this->get_prefix(false)."->count_by_comment(\$params)</code> wherever you like (don't forget <code>global $".$this->get_prefix(false)."</code>). These functions can also be invoked by the usage of shortcodes. The default values for these function can be set in the ".$this->get_section_link($this->options_page_sections, 'defaults', 'Default Values Section').", by using <a target=\"_blank\" href=\"http://wordpress.org/extend/plugins/featuring-countcomments/other_notes/\">WordPress filters</a>, or directly in the <abbr title=\"PHP: Hypertext Preprocessor\">PHP</abbr> function/WordPress shortcode calls.</li>
+			<li><a target=\"_blank\" href=\"http://wordpress.org/plugins/featuring-countcomments/other_notes/\">Geek stuff</a>: You can output the comment counts of your users by calling the <abbr title=\"PHP: Hypertext Preprocessor\">PHP</abbr> function <code>$".$this->get_prefix(false)."->count_by_user(\$params)</code> or <code>$".$this->get_prefix(false)."->count_by_comment(\$params)</code> wherever you like (don't forget <code>global $".$this->get_prefix(false)."</code>). These functions can also be invoked by the usage of shortcodes. The default values for these function can be set in the ".$this->get_section_link($this->options_page_sections, 'defaults', 'Default Values Section').", by using <a target=\"_blank\" href=\"http://wordpress.org/plugins/featuring-countcomments/other_notes/\">WordPress filters</a>, or directly in the <abbr title=\"PHP: Hypertext Preprocessor\">PHP</abbr> function/WordPress shortcode calls.</li>
 
 			<li>If you decide to uninstall ".$this->get_nicename().", firstly remove the optionally added <a href=\"widgets.php\">Sidebar Widget</a>, integrated <abbr title=\"PHP: Hypertext Preprocessor\">PHP</abbr> function or WordPress shortcode call(s). Afterwards, disable and delete ".$this->get_nicename()." in the <a href=\"plugins.php\">Plugins Tab</a>.</li>
 
-			<li><strong>For more information:</strong><br /><a target=\"_blank\" href=\"http://wordpress.org/extend/plugins/".str_replace('_', '-', $this->get_prefix(false))."/\">".$this->get_nicename()." in the WordPress Plugin Directory</a></li>
+			<li><strong>For more information:</strong><br /><a target=\"_blank\" href=\"http://wordpress.org/plugins/".str_replace('_', '-', $this->get_prefix(false))."/\">".$this->get_nicename()." in the WordPress Plugin Directory</a></li>
 
 		</ul></div>";
 	}
-
 
 	/*
 	section dashboard
@@ -2082,7 +2063,7 @@ class FeaturingCountComments {
 			if (!empty($selected_test_set) && $function==$selected_test_set || empty($selected_test_set))
 				foreach ($function_test_set as $function_test) {
 					echo($function_test['description'].': ');
-					call_user_func(array(&$this, $function), $function_test['params']);
+					call_user_func(array($this, $function), $function_test['params']);
 					echo('<br />');
 				}
 		}
@@ -2205,7 +2186,7 @@ class WP_Widget_FeaturingCountComments extends WP_Widget {
 	constructor
 	*/
 
-	function WP_Widget_FeaturingCountComments () {
+	function __construct() {
 		global $featuring_countcomments;
 
 		$widget_ops = array(
@@ -2213,7 +2194,7 @@ class WP_Widget_FeaturingCountComments extends WP_Widget {
 			'description' => 'Counts the number of comments by the currently logged in user.'
 		);
 
-		$this->WP_Widget($featuring_countcomments->get_prefix(false), $featuring_countcomments->get_nicename(), $widget_ops);
+		parent::__construct($featuring_countcomments->get_prefix(false), $featuring_countcomments->get_nicename(), $widget_ops);
 	}
 
 	/*
@@ -2360,115 +2341,3 @@ function featuring_countcomments_uninstall() {
 	}
 
 register_uninstall_hook(__FILE__, 'featuring_countcomments_uninstall');
-
-/*
-DEPRECATED FUNCTIONS
-*/
-
-function fcc_get_comment_count($comment) {
-	global $featuring_countcomments;
-
-	$featuring_countcomments->deprecated_function(__FUNCTION__, '1.00', 'count_by_comment');
-
-	$params=array(
-		'comment' => $comment,
-		'format' => false,
-		'display' => false,
-		'in_loop' => true
-	);
-
-	return $featuring_countcomments->count_by_comment($params);
-}
-
-function fcc_comment_count($zero='0 comments', $one='1 comment', $more='%c comments') {
-	global $featuring_countcomments;
-
-	$featuring_countcomments->deprecated_function(__FUNCTION__, '1.00', 'count_by_comment');
-
-	$params=array(
-		'format' => true,
-		'zero' => $zero,
-		'one' => $one,
-		'more' => $more,
-		'display' => true,
-		'in_loop' => true
-	);
-
-	$featuring_countcomments->count_by_comment($params);
-}
-
-function fcc_get_count_comments_author($author) {
-	global $featuring_countcomments;
-
-	$featuring_countcomments->deprecated_function(__FUNCTION__, '1.00', 'count_by_user');
-
-	$params=array(
-		'user_attribute' => $author,
-		'query_type' => 'display_name',
-		'format' => false,
-		'display' => false
-	);
-
-	return $featuring_countcomments->count_by_user($params);
-}
-
-function fcc_get_count_comments_authorID($authorID) {
-	global $featuring_countcomments;
-
-	$featuring_countcomments->deprecated_function(__FUNCTION__, '1.00', 'count_by_user');
-
-	$params=array(
-		'user_attribute' => $authorID,
-		'query_type' => 'user_id',
-		'format' => false,
-		'display' => false
-	);
-
-	return $featuring_countcomments->count_by_user($params);
-}
-
-function fcc_count_comments_author($zero='0 comments', $one='1 comment', $more='%c comments') {
-	global $featuring_countcomments;
-
-	$featuring_countcomments->deprecated_function(__FUNCTION__, '1.00', 'count_by_user');
-
-	$params=array(
-		'query_type' => 'user_id',
-		'format' => true,
-		'display' => true
-	);
-
-	$featuring_countcomments->count_by_user($params);
-}
-
-function fcc_count_comments_by_author($zero='0 comments', $one='1 comment', $more='%c comments', $author) {
-	global $featuring_countcomments;
-
-	$featuring_countcomments->deprecated_function(__FUNCTION__, '1.00', 'count_by_user');
-
-	$params=array(
-		'user_attribute' => $author,
-		'query_type' => 'display_name',
-		'format' => true,
-		'display' => true
-	);
-
-	$featuring_countcomments->count_by_user($params);
-}
-
-function fcc_count_comments_by_authorID($zero='0 comments', $one='1 comment', $more='%c comments', $authorID) {
-	global $featuring_countcomments;
-
-	$featuring_countcomments->deprecated_function(__FUNCTION__, '1.00', 'count_by_user');
-
-	$params=array(
-		'user_attribute' => $authorID,
-		'query_type' => 'user_id',
-		'format' => true,
-		'display' => true
-	);
-
-	$featuring_countcomments->count_by_user($params);
-}
-
-?>

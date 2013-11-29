@@ -2,8 +2,8 @@
 Contributors: neoxx
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=NF3C4TNWWM77W
 Tags: count, comment, comments, author, authors, user, users, widget, dashboard, sidebar, shortcode, multisite, multi-site
-Requires at least: 3.2
-Tested up to: 3.6
+Requires at least: 3.3
+Tested up to: 3.8
 Stable tag: trunk
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -12,28 +12,22 @@ Counts the number of comments for each user, who has been logged in at the time 
 
 == Description ==
 
-Counts the number of comments for each user who has been logged in at the time of commenting.
-
-**starting from version 1.00 with a new API and widget functionality**
-
 * extends information on Users page in Admin Menu with comment counts
 * optionpage-configurable for standard functions
 * easy to integrate (ships with multi/sidebar- and dashboard-widget functionality)
 * possible to integrate in "Right Now" box or to display as widget on the dashboard and on the user's profile page
 * high performance because users' comment counts are re-used within a page-call
+* [API for developers](http://wordpress.org/plugins/featuring-countcomments/other_notes/)
 * fully compatible with [https/SSL/TLS-sites](http://codex.wordpress.org/Administration_Over_SSL)
-* fully WP 3.0 multi-site network compatible
+* fully multisite network compatible
 * clean uninstall
 
-Requirements for current version:
-
-* Your users have to be registered and logged in to comment - **Thus, Featuring CountComments will not work properly in weblogs where anonymous comments are allowed!**
-* PHP 5 or higher (find the version for PHP 4 [here](http://downloads.wordpress.org/plugin/featuring-countcomments.wordpressminor2.8.zip))
-* You can check your PHP version with the [Health Check](http://wordpress.org/extend/plugins/health-check/) plugin.
+Requirement for this plugin: Your users have to be registered and logged in to comment - **Thus, Featuring CountComments will not work properly in weblogs where anonymous comments are allowed!**
 
 Please find the version for WordPress
 
-* 3.2 and higher [here](http://downloads.wordpress.org/plugin/featuring-countcomments.zip)
+* 3.3 and higher [here](http://downloads.wordpress.org/plugin/featuring-countcomments.zip)
+* 3.2 [here](http://downloads.wordpress.org/plugin/featuring-countcomments.wordpress3.2.zip)
 * 2.8 to 3.1 [here](http://downloads.wordpress.org/plugin/featuring-countcomments.wordpress2.8-3.1.zip)
 * minor 2.8 [here](http://downloads.wordpress.org/plugin/featuring-countcomments.wordpressminor2.8.zip)
 
@@ -49,15 +43,11 @@ Please find the version for WordPress
 
 3. Navigate to the Settings/Featuring Countcomments tab and optionally customize the defaults according to your desires.
 
-4. If you have widget functionality just drag and drop Featuring CountComments on your widget area in the Appearance Menu. Add additional [function and shortcode calls](http://wordpress.org/extend/plugins/featuring-countcomments/other_notes/) according to your desires.
+4. If you have widget functionality just drag and drop Featuring CountComments on your widget area in the Appearance Menu. Add additional [function and shortcode calls](http://wordpress.org/plugins/featuring-countcomments/other_notes/) according to your desires.
 
 5. Be happy and celebrate! (and maybe you want to add a link to [http://www.bernhard-riedl.com/projects/](http://www.bernhard-riedl.com/projects/))
 
 == Frequently Asked Questions ==
-
-= After updating to 1.00 I get warnings in my debug-log? - What's wrong? =
-
-As I've completly reworked Featuring CountComments, I deprecated the old functions. You should still be able to use them, but I'd rather recommend you to have a look at the new [function calls](http://wordpress.org/extend/plugins/featuring-countcomments/other_notes/).
 
 = Why do my users have to be registered to comment? =
 
@@ -68,12 +58,6 @@ Various user attributes can be used in queries. Though, the internal structure i
 Already queried results are cached within a single page-call to avoid executing too many queries. This results in increased performance.
 
 Moreover, in case of querying the comment count of a certain post's comment, only two SQL statements will be used to retrieve the comment count of all users who contributed to this post.
-
-= If I click on the comment count in the Users page of the Admin Menu I do not receive all comments of the associated user and sometimes comments from other users. - What's wrong? =
-
-Actually, there is nothing wrong. - In previous versions, Featuring CountComments used the built-in full-text comment search of WordPress.
-
-With WordPress >= 3.1 and Featuring CountComments >= 1.20 [the results are queried by user-id instead of display-name](https://core.trac.wordpress.org/ticket/14163).
 
 == Other Notes ==
 
@@ -232,11 +216,15 @@ Receives an array which is used for the users-page-function call to `$featuring_
 
 1. This screenshot shows the extended users table in the Admin Menu.
 
-2. This picture shows an example widget output in the sidebar.
+2. This picture presents an example widget output in the sidebar.
 
-3. This screenshot shows the Settings/Featuring CountComments Tab in the Admin Menu.
+3. This screenshot depicts the Settings/Featuring CountComments Tab in the Admin Menu.
 
 == Upgrade Notice ==
+
+= 1.40 =
+
+This is a general code clean-up. - Please note that for Featuring CountComments v1.40 you need at minimum WordPress 3.3.
 
 = 1.30 =
 
@@ -247,6 +235,23 @@ The minimum requirement is now WordPress 3.2
 All old functions have been deprecated in favor of `$featuring_countcomments->count_by_user()` and `featuring_countcomments->count_by_comment()`.
 
 == Changelog ==
+
+= 1.40 =
+* removed legacy-code -> minimum-version of WordPress necessary is now 3.3
+* removed deprecated functions
+ * fcc_get_comment_count()
+ * fcc_comment_count()
+ * fcc_get_count_comments_author()
+ * fcc_get_count_comments_authorID()
+ * fcc_count_comments_author()
+ * fcc_count_comments_by_author()
+ * fcc_count_comments_by_authorID()
+* applied PHP 5 constructor in widget
+* tested with PHP 5.4
+* removed PHP closing tag before EOF
+* removed reference sign on function calls
+* adopted plugin-links to the new structure of wordpress.org
+* cleaned-up code
 
 = 1.33 =
 * made add-link to [link manager for WordPress 3.5 and higher optional](https://core.trac.wordpress.org/ticket/21307)
