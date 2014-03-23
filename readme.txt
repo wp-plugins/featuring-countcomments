@@ -3,7 +3,7 @@ Contributors: neoxx
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=NF3C4TNWWM77W
 Tags: count, comment, comments, author, authors, user, users, widget, dashboard, sidebar, shortcode, multisite, multi-site
 Requires at least: 3.3
-Tested up to: 3.8
+Tested up to: 3.9
 Stable tag: trunk
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -235,6 +235,13 @@ The minimum requirement is now WordPress 3.2
 All old functions have been deprecated in favor of `$featuring_countcomments->count_by_user()` and `featuring_countcomments->count_by_comment()`.
 
 == Changelog ==
+
+= 1.50 =
+
+* implemented responsive web design on settings-page
+* removed calls to screen_icon()
+* extended length of format-parameters to provide space for example for mobile css-classes
+* cleaned-up code
 
 = 1.40 =
 * removed legacy-code -> minimum-version of WordPress necessary is now 3.3

@@ -5,14 +5,14 @@ Plugin Name: Featuring CountComments
 Plugin URI: http://www.bernhard-riedl.com/projects/
 Description: Counts the number of comments for each user who has been logged in at the time of commenting.
 Author: Dr. Bernhard Riedl
-Version: 1.40
+Version: 1.50
 Author URI: http://www.bernhard-riedl.com/
 */
 
 /*
-Copyright 2006-2013 Dr. Bernhard Riedl
+Copyright 2006-2014 Dr. Bernhard Riedl
 
-Inspirations & Proof-Reading 2007-2013
+Inspirations & Proof-Reading 2007-2014
 by Veronika Grascher
 original idea by Martijn van der Kwast
 
@@ -222,6 +222,14 @@ class FeaturingCountComments {
 	}
 
 	/*
+	register css styles
+	*/
+
+	function register_styles() {
+		wp_register_style($this->get_prefix().'admin', $this->get_plugin_url().'css/admin.css', array(), '1.50');
+	}
+
+	/*
 	register WordPress hooks
 	*/
 
@@ -232,6 +240,7 @@ class FeaturingCountComments {
 		*/
 
 		add_action('init', array($this, 'register_scripts'));
+		add_action('init', array($this, 'register_styles'));
 
 		/*
 		general
@@ -793,17 +802,13 @@ class FeaturingCountComments {
 
 	/*
 	add Featuring CountComments to WordPress Settings Menu
-
-	we use the hook admin_head instead of admin_print_styles
-	because otherwise the CSS-background for disabled
-	input fields does not work
 	*/
 
 	function admin_menu() {
 		$options_page=add_options_page($this->get_nicename(), $this->get_nicename(), 'manage_options', $this->get_prefix(false), array($this, 'options_page'));
 
 		add_action('admin_print_scripts-'.$options_page, array($this, 'settings_print_scripts'));
-		add_action('admin_head-'.$options_page, array($this, 'admin_styles'));
+		add_action('admin_print_styles-'.$options_page, array($this, 'admin_print_styles'));
 		add_action('load-'.$options_page, array($this, 'options_page_help_tab'));
 	}
 
@@ -812,7 +817,7 @@ class FeaturingCountComments {
 	*/
 
 	function head_meta() {
-		echo("<meta name=\"".$this->get_nicename()."\" content=\"1.40\" />\n");
+		echo("<meta name=\"".$this->get_nicename()."\" content=\"1.50\" />\n");
 	}
 
 	/*
@@ -966,54 +971,13 @@ class FeaturingCountComments {
 	}
 
 	/*
-	loads the necessary CSS-styles
+	includes the necessary CSS-styles
 	for the admin-page
 	*/
 
-	function admin_styles() { ?>
-
-	<style type="text/css">
-
-			.<?php echo($this->get_prefix()); ?>wrap ul {
-				list-style-type : disc;
-				padding: 5px 5px 5px 30px;
-			}
-
-			ul.subsubsub.<?php echo($this->get_prefix(false)); ?> {
-				list-style: none;
-				margin: 8px 0 5px;
-				padding: 0;
-				white-space: nowrap;
-				float: none;
-				display: block;
-			}
- 
-			ul.subsubsub.<?php echo($this->get_prefix(false)); ?> a {
-				line-height: 2;
-				padding: .2em;
-				text-decoration: none;
-			}
-
-			ul.subsubsub.<?php echo($this->get_prefix(false)); ?> li {
-				display: inline;
-				margin: 0;
-				padding: 0;
-				border-left: 1px solid #ccc;
-				padding: 0 .5em;
-			}
-
-			ul.subsubsub.<?php echo($this->get_prefix(false)); ?> li:first-child {
-				padding-left: 0;
-				border-left: none;
-			}
-
- 			input[disabled], input[disabled='disabled'] {
-				background: #EEE;
-			}
-
-	</style>
-
-	<?php }
+	function admin_print_styles() {
+		wp_enqueue_style($this->get_prefix().'admin');
+	}
 
 	/*
 	LOGIC FUNCTIONS
@@ -1533,7 +1497,6 @@ class FeaturingCountComments {
 		*/
 
 		?><div class="wrap">
-		<?php if (function_exists('screen_icon')) screen_icon(); ?>
 		<h2><?php echo($this->get_nicename()); ?></h2>
 
 		<?php call_user_func(array($this, 'callback_'.$section_prefix.'_intro')); ?>
@@ -1544,7 +1507,9 @@ class FeaturingCountComments {
 		$menu='';
 
 		foreach ($settings_sections as $key => $section)
-			$menu.='<li>'.$this->get_section_link($settings_sections, $key, '', true).'</li>';
+			$menu.='<li>'.$this->get_section_link($settings_sections, $key, '', true).' |</li>';
+
+		$menu=substr($menu, 0, strlen($menu)-7).'</li>';
 
 		echo($menu);
 		?>
@@ -1646,7 +1611,6 @@ class FeaturingCountComments {
 
 		jQuery('#<?php echo($this->get_prefix()); ?>menu').css('display', 'block');
 		jQuery('#<?php echo($this->get_prefix()); ?>content').css('display', 'block');
-
 	});
 
 	/* ]]> */
@@ -1724,8 +1688,11 @@ class FeaturingCountComments {
 	*/
 
 	private function setting_textfield($name, $type, $size=30, $javascript_validate='') {
-		$default_value=$this->get_setting_default_value($name, $type); ?>
-		<input type="text" <?php echo($this->get_setting_name_and_id($name).' '.$javascript_validate); ?> maxlength="<?php echo($size); ?>" size="<?php echo($size); ?>" value="<?php echo $default_value; ?>" />
+		$default_value=$this->get_setting_default_value($name, $type);
+		$size_attribute=($size>40) ? 'class="widefat"' : 'size="'.$size.'"';
+		?>
+
+		<input type="text" <?php echo($this->get_setting_name_and_id($name).' '.$javascript_validate); ?> maxlength="<?php echo($size); ?>" <?php echo($size_attribute); ?> value="<?php echo $default_value; ?>" />
 	<?php }
 
 	/*
@@ -1768,7 +1735,7 @@ class FeaturingCountComments {
 		<h3>Support</h3>
 		<?php echo($user_identity); ?>, if you would like to support the development of <?php echo($this->get_nicename()); ?>, you can invite me for a <a target="_blank" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=NF3C4TNWWM77W">virtual pizza</a> for my work. <?php echo(convert_smilies(':)')); ?><br /><br />
 
-		<a target="_blank" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=NF3C4TNWWM77W"><img src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" alt="Donate to <?php echo($this->get_nicename()); ?>" /></a><br /><br />
+		<a class="<?php echo($this->get_prefix()); ?>button_donate" title="Donate to <?php echo($this->get_nicename()); ?>" target="_blank" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=NF3C4TNWWM77W">Donate</a><br /><br />
 
 		Maybe you also want to <?php if (current_user_can('manage_links') && ((!has_filter('default_option_link_manager_enabled') || get_option( 'link_manager_enabled')))) { ?><a href="link-add.php"><?php } ?>add a link<?php if (current_user_can('manage_links') && ((!has_filter('default_option_link_manager_enabled') || get_option( 'link_manager_enabled')))) { ?></a><?php } ?> to <a target="_blank" href="http://www.bernhard-riedl.com/projects/">http://www.bernhard-riedl.com/projects/</a>.<br /><br />
 	<?php }
@@ -1827,7 +1794,7 @@ class FeaturingCountComments {
 	}
 
 	function setting_dashboard_widget_text($params=array()) {
-		$this->setting_textfield('dashboard_widget_text', 'options', 100);
+		$this->setting_textfield('dashboard_widget_text', 'options', 250);
 	}
 
 	function setting_dashboard_right_now($params=array()) {
@@ -1835,7 +1802,7 @@ class FeaturingCountComments {
 	}
 
 	function setting_dashboard_right_now_text($params=array()) {
-		$this->setting_textfield('dashboard_right_now_text', 'options', 100);
+		$this->setting_textfield('dashboard_right_now_text', 'options', 250);
 	}
 
 	/*
@@ -1843,7 +1810,7 @@ class FeaturingCountComments {
 	*/
 
 	function callback_settings_user_profile() { ?>
-		If you enable the next option, <?php echo($this->get_nicename()); ?> will show the comment count of the currently logged on the user's <a href="profile.php">profile page</a>.
+		If you enable the next option, <?php echo($this->get_nicename()); ?> will show the comment count of the currently logged on the <a href="profile.php">user's profile page</a>.
 	<?php }
 
 	function setting_include_user_profile($params=array()) {
@@ -1851,7 +1818,7 @@ class FeaturingCountComments {
 	}
 
 	function setting_user_profile_text($params=array()) {
-		$this->setting_textfield('user_profile_text', 'options', 100);
+		$this->setting_textfield('user_profile_text', 'options', 250);
 	}
 
 	/*
@@ -1896,15 +1863,15 @@ class FeaturingCountComments {
 	}
 
 	function setting_zero($params=array()) {
-		$this->setting_textfield('zero', 'defaults');
+		$this->setting_textfield('zero', 'defaults', 100);
 	}
 
 	function setting_one($params=array()) {
-		$this->setting_textfield('one', 'defaults');
+		$this->setting_textfield('one', 'defaults', 100);
 	}
 
 	function setting_more($params=array()) {
-		$this->setting_textfield('more', 'defaults');
+		$this->setting_textfield('more', 'defaults', 100);
 	}
 
 	function setting_thousands_separator($params=array()) {
