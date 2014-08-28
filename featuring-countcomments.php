@@ -5,7 +5,7 @@ Plugin Name: Featuring CountComments
 Plugin URI: http://www.bernhard-riedl.com/projects/
 Description: Counts the number of comments for each user who has been logged in at the time of commenting.
 Author: Dr. Bernhard Riedl
-Version: 1.50
+Version: 1.51
 Author URI: http://www.bernhard-riedl.com/
 */
 
@@ -38,7 +38,7 @@ You should have received a copy of the
 GNU General Public License
 along with this program.
 
-If not, see http://www.gnu.org/licenses/.
+If not, see https://www.gnu.org/licenses/.
 */
 
 /*
@@ -817,7 +817,7 @@ class FeaturingCountComments {
 	*/
 
 	function head_meta() {
-		echo("<meta name=\"".$this->get_nicename()."\" content=\"1.50\" />\n");
+		echo("<meta name=\"".$this->get_nicename()."\" content=\"1.51\" />\n");
 	}
 
 	/*
@@ -1572,7 +1572,7 @@ class FeaturingCountComments {
 	<?php }
 
 	/*
-	settings pages's javascript
+	settings page's javascript
 	*/
 
 	private function settings_page_js($settings_sections) { ?>
@@ -1772,11 +1772,11 @@ class FeaturingCountComments {
 
 			<li>You can display the comment count of the user who is currently logged in, by adding a <a href=\"widgets.php\">Sidebar Widget</a>, enabling the ".$this->get_section_link($this->options_page_sections, 'dashboard', 'Dashboard Widget')." or displaying it on the ".$this->get_section_link($this->options_page_sections, 'user_profile', 'user\'s profile page').".</li>
 
-			<li><a target=\"_blank\" href=\"http://wordpress.org/plugins/featuring-countcomments/other_notes/\">Geek stuff</a>: You can output the comment counts of your users by calling the <abbr title=\"PHP: Hypertext Preprocessor\">PHP</abbr> function <code>$".$this->get_prefix(false)."->count_by_user(\$params)</code> or <code>$".$this->get_prefix(false)."->count_by_comment(\$params)</code> wherever you like (don't forget <code>global $".$this->get_prefix(false)."</code>). These functions can also be invoked by the usage of shortcodes. The default values for these function can be set in the ".$this->get_section_link($this->options_page_sections, 'defaults', 'Default Values Section').", by using <a target=\"_blank\" href=\"http://wordpress.org/plugins/featuring-countcomments/other_notes/\">WordPress filters</a>, or directly in the <abbr title=\"PHP: Hypertext Preprocessor\">PHP</abbr> function/WordPress shortcode calls.</li>
+			<li><a target=\"_blank\" href=\"https://wordpress.org/plugins/featuring-countcomments/other_notes/\">Geek stuff</a>: You can output the comment counts of your users by calling the <abbr title=\"PHP: Hypertext Preprocessor\">PHP</abbr> function <code>$".$this->get_prefix(false)."->count_by_user(\$params)</code> or <code>$".$this->get_prefix(false)."->count_by_comment(\$params)</code> wherever you like (don't forget <code>global $".$this->get_prefix(false)."</code>). These functions can also be invoked by the usage of shortcodes. The default values for these function can be set in the ".$this->get_section_link($this->options_page_sections, 'defaults', 'Default Values Section').", by using <a target=\"_blank\" href=\"https://wordpress.org/plugins/featuring-countcomments/other_notes/\">WordPress filters</a>, or directly in the <abbr title=\"PHP: Hypertext Preprocessor\">PHP</abbr> function/WordPress shortcode calls.</li>
 
 			<li>If you decide to uninstall ".$this->get_nicename().", firstly remove the optionally added <a href=\"widgets.php\">Sidebar Widget</a>, integrated <abbr title=\"PHP: Hypertext Preprocessor\">PHP</abbr> function or WordPress shortcode call(s). Afterwards, disable and delete ".$this->get_nicename()." in the <a href=\"plugins.php\">Plugins Tab</a>.</li>
 
-			<li><strong>For more information:</strong><br /><a target=\"_blank\" href=\"http://wordpress.org/plugins/".str_replace('_', '-', $this->get_prefix(false))."/\">".$this->get_nicename()." in the WordPress Plugin Directory</a></li>
+			<li><strong>For more information:</strong><br /><a target=\"_blank\" href=\"https://wordpress.org/plugins/".str_replace('_', '-', $this->get_prefix(false))."/\">".$this->get_nicename()." in the WordPress Plugin Directory</a></li>
 
 		</ul></div>";
 	}
@@ -1895,7 +1895,7 @@ class FeaturingCountComments {
 		<ul>
 			<li>If you select <em>Display comment count on User page in Admin Menu</em>, every user's comment count will be displayed on the <a href="users.php">users-page</a>.</li>
 
-			<li>If you want to keep the comment counts as a secret, you can deactivate <em>All users can view other users' comment counts</em>. In that case, only users with the <em><a target="_blank" href="http://codex.wordpress.org/Roles_and_Capabilities">Capability</a> to view comment count of other users</em> can access this information.</li>
+			<li>If you want to keep the comment counts as a secret, you can deactivate <em>All users can view other users' comment counts</em>. In that case, only users with the <em><a target="_blank" href="https://codex.wordpress.org/Roles_and_Capabilities">Capability</a> to view comment count of other users</em> can access this information.</li>
 
 			<li>The <em>Debug Mode</em> can be used to have a look on the actions undertaken by <?php echo($this->get_nicename()); ?> and to investigate unexpected behaviour.</li>
 		</ul>
@@ -2171,8 +2171,6 @@ class WP_Widget_FeaturingCountComments extends WP_Widget {
 	function widget($args, $instance) {
 		global $featuring_countcomments;
 
-		extract($args);
-
 		$title = !isset($instance['title']) ? '' : apply_filters('widget_title', $instance['title']);
 		$text = !isset($instance['text']) ? 'You\'ve already written %c.' : esc_attr($instance['text']);
 		$empty_string = !isset($instance['empty_string']) ? null : esc_attr($instance['empty_string']);
@@ -2225,10 +2223,12 @@ class WP_Widget_FeaturingCountComments extends WP_Widget {
 			$count_string=str_replace('%c', $formatted_comment_count, $text);
 		}
 
-		echo $before_widget;
-		echo $before_title . $title . $after_title;
+		echo $args['before_widget'];
+		echo $args['before_title'] . $title . $args['after_title'];
+
 		echo '<ul><li>'.$count_string.'</li></ul>';
-	    	echo $after_widget;
+
+		echo $args['after_widget'];
 	}
 
 	/*

@@ -3,22 +3,22 @@ Contributors: neoxx
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=NF3C4TNWWM77W
 Tags: count, comment, comments, author, authors, user, users, widget, dashboard, sidebar, shortcode, multisite, multi-site
 Requires at least: 3.3
-Tested up to: 3.9
+Tested up to: 4.0
 Stable tag: trunk
 License: GPLv3 or later
-License URI: http://www.gnu.org/licenses/gpl-3.0.html
+License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
 Counts the number of comments for each user, who has been logged in at the time of commenting.
 
 == Description ==
 
 * extends information on Users page in Admin Menu with comment counts
-* optionpage-configurable for standard functions
+* settings page configurable for standard functions
 * easy to integrate (ships with multi/sidebar- and dashboard-widget functionality)
 * possible to integrate in "Right Now" box or to display as widget on the dashboard and on the user's profile page
 * high performance because users' comment counts are re-used within a page-call
-* [API for developers](http://wordpress.org/plugins/featuring-countcomments/other_notes/)
-* fully compatible with [https/SSL/TLS-sites](http://codex.wordpress.org/Administration_Over_SSL)
+* [API for developers](https://wordpress.org/plugins/featuring-countcomments/other_notes/)
+* fully compatible with [https/SSL/TLS-sites](https://codex.wordpress.org/Administration_Over_SSL)
 * fully multisite network compatible
 * clean uninstall
 
@@ -26,10 +26,10 @@ Requirement for this plugin: Your users have to be registered and logged in to c
 
 Please find the version for WordPress
 
-* 3.3 and higher [here](http://downloads.wordpress.org/plugin/featuring-countcomments.zip)
-* 3.2 [here](http://downloads.wordpress.org/plugin/featuring-countcomments.wordpress3.2.zip)
-* 2.8 to 3.1 [here](http://downloads.wordpress.org/plugin/featuring-countcomments.wordpress2.8-3.1.zip)
-* minor 2.8 [here](http://downloads.wordpress.org/plugin/featuring-countcomments.wordpressminor2.8.zip)
+* 3.3 and higher [here](https://downloads.wordpress.org/plugin/featuring-countcomments.zip)
+* 3.2 [here](https://downloads.wordpress.org/plugin/featuring-countcomments.wordpress3.2.zip)
+* 2.8 to 3.1 [here](https://downloads.wordpress.org/plugin/featuring-countcomments.wordpress2.8-3.1.zip)
+* minor 2.8 [here](https://downloads.wordpress.org/plugin/featuring-countcomments.wordpressminor2.8.zip)
 
 **Plugin's website:** [http://www.bernhard-riedl.com/projects/](http://www.bernhard-riedl.com/projects/)
 
@@ -43,7 +43,7 @@ Please find the version for WordPress
 
 3. Navigate to the Settings/Featuring Countcomments tab and optionally customize the defaults according to your desires.
 
-4. If you have widget functionality just drag and drop Featuring CountComments on your widget area in the Appearance Menu. Add additional [function and shortcode calls](http://wordpress.org/plugins/featuring-countcomments/other_notes/) according to your desires.
+4. If you have widget functionality just drag and drop Featuring CountComments on your widget area in the Appearance Menu. Add additional [function and shortcode calls](https://wordpress.org/plugins/featuring-countcomments/other_notes/) according to your desires.
 
 5. Be happy and celebrate! (and maybe you want to add a link to [http://www.bernhard-riedl.com/projects/](http://www.bernhard-riedl.com/projects/))
 
@@ -65,7 +65,7 @@ Moreover, in case of querying the comment count of a certain post's comment, onl
 
 = API =
 
-Parameters can either be passed [as an array or a URL query type string (e.g. "display=0&format=0")](http://codex.wordpress.org/Function_Reference/wp_parse_args). Please note that WordPress parses all arguments as strings, thus booleans have to be 0 or 1 if used in query type strings whereas for arrays [real booleans](http://php.net/manual/en/language.types.boolean.php) should be used.
+Parameters can either be passed [as an array or a URL query type string (e.g. "display=0&format=0")](https://codex.wordpress.org/Function_Reference/wp_parse_args). Please note that WordPress parses all arguments as strings, thus booleans have to be 0 or 1 if used in query type strings whereas for arrays [real booleans](https://php.net/manual/en/language.types.boolean.php) should be used.
 
 **`$featuring_countcomments->count_by_user($params=array())`**
 
@@ -96,7 +96,7 @@ $params:
 
 - `display`: if you want to return the count (e.g. for storing it in a variable) instead of echoing it with this function-call, set `display` to `false`; default setting is `true`
 
-The following example outputs the comment count of the user with the registered e-mail address 'j.doe@mydomain.com'.
+The following example outputs the comment count of the user with the registered e-mail address 'j.doe@example.com'.
 
 `<?php
 
@@ -104,7 +104,7 @@ global $featuring_countcomments;
 
 $params=array(
 	'query_type' => 'user_email',
-	'user_attribute' => 'j.doe@mydomain.com'
+	'user_attribute' => 'j.doe@example.com'
 );
 
 $featuring_countcomments->count_by_user($params);
@@ -145,7 +145,7 @@ $featuring_countcomments->count_by_comment();
 
 = Shortcodes =
 
-[How-to for shortcodes](http://codex.wordpress.org/Shortcode_API)
+[How-to for shortcodes](https://codex.wordpress.org/Shortcode_API)
 
 **General Example:**
 
@@ -165,7 +165,7 @@ Invokes `$featuring_countcomments->count_by_comment($params)`.
 
 = Filters =
 
-[How-To for filters](http://codex.wordpress.org/Function_Reference/add_filter)
+[How-To for filters](https://codex.wordpress.org/Function_Reference/add_filter)
 
 **General Example:**
 
@@ -180,7 +180,7 @@ add_filter('featuring_countcomments_defaults', 'my_featuring_countcomments_defau
 
 `featuring_countcomments_defaults`
 
-In case you want to set the default parameters globally rather than handing them over on every function call, you can add the [filter](http://codex.wordpress.org/Function_Reference/add_filter) `featuring_countcomments_defaults` in for example featuring-countcomments.php or your [own customization plugin](http://codex.wordpress.org/Writing_a_Plugin) (recommended).
+In case you want to set the default parameters globally rather than handing them over on every function call, you can add the [filter](https://codex.wordpress.org/Function_Reference/add_filter) `featuring_countcomments_defaults` in for example featuring-countcomments.php or your [own customization plugin](https://codex.wordpress.org/Writing_a_Plugin) (recommended).
 
 Please note that parameters which you hand over to a function call (`$featuring_countcomments->count_by_user` or `$featuring_countcomments->count_by_comment`) will always override the defaults parameters, even if they have been set by a filter or in the admin menu.
 
@@ -235,6 +235,12 @@ The minimum requirement is now WordPress 3.2
 All old functions have been deprecated in favor of `$featuring_countcomments->count_by_user()` and `featuring_countcomments->count_by_comment()`.
 
 == Changelog ==
+
+= 1.51 =
+
+* cleaned-up code
+* SSLified links
+* added assets/icons
 
 = 1.50 =
 
