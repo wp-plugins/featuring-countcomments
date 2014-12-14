@@ -3,7 +3,7 @@ Contributors: neoxx
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=NF3C4TNWWM77W
 Tags: count, comment, comments, author, authors, user, users, widget, dashboard, sidebar, shortcode, multisite, multi-site
 Requires at least: 3.3
-Tested up to: 4.0
+Tested up to: 4.1
 Stable tag: trunk
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -75,7 +75,7 @@ $params:
 
 - `user_attribute`: one of the user's attributes (matching `query_type`), for example, the user_id or a WP_User object; if no user_attribute is given, will fallback to currently logged in user
 
-- `query_type`: corresponding sql-field of user's attribute or WP_User object; default is `user_id`
+- `query_type`: corresponding SQL-field of user's attribute or WP_User object; default is `user_id`
 
  - user_id
  - display_name
@@ -235,6 +235,13 @@ The minimum requirement is now WordPress 3.2
 All old functions have been deprecated in favor of `$featuring_countcomments->count_by_user()` and `featuring_countcomments->count_by_comment()`.
 
 == Changelog ==
+
+= 1.60 =
+
+* switched SQL queries to prepared statements
+* marked menu semantically
+* enhanced uninstall procedure
+* set appropriate http-status codes for wp_die()-calls
 
 = 1.51 =
 

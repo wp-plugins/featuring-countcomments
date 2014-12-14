@@ -5,7 +5,7 @@ Plugin Name: Featuring CountComments
 Plugin URI: http://www.bernhard-riedl.com/projects/
 Description: Counts the number of comments for each user who has been logged in at the time of commenting.
 Author: Dr. Bernhard Riedl
-Version: 1.51
+Version: 1.60
 Author URI: http://www.bernhard-riedl.com/
 */
 
@@ -724,14 +724,14 @@ class FeaturingCountComments {
 		*/
 
 		else {
-			$q = "SELECT ".$wpdb->users.".ID FROM ".$wpdb->users." WHERE ".$wpdb->users.".".$params['query_type']." = '".$wpdb->escape($params['user_attribute'])."'";
+			$q=$wpdb->prepare("SELECT $wpdb->users.ID FROM $wpdb->users WHERE $wpdb->users.".$params['query_type']."=%s", $params['user_attribute']);
 			$this->log($q, 1);
 
 			/*
 			query for user-id
 			*/
 
-			$user_id = $wpdb->get_var($q);
+			$user_id=$wpdb->get_var($q);
 
 			/*
 			did we receive an id?
@@ -817,7 +817,7 @@ class FeaturingCountComments {
 	*/
 
 	function head_meta() {
-		echo("<meta name=\"".$this->get_nicename()."\" content=\"1.51\" />\n");
+		echo("<meta name=\"".$this->get_nicename()."\" content=\"1.60\" />\n");
 	}
 
 	/*
@@ -1173,11 +1173,11 @@ class FeaturingCountComments {
 		get all commenters for current post
 		*/
 
-		$q = "SELECT DISTINCT $wpdb->comments.user_id FROM $wpdb->comments WHERE $wpdb->comments.comment_post_ID = $post_ID AND $wpdb->comments.user_id <> ''";
+		$q=$wpdb->prepare("SELECT DISTINCT $wpdb->comments.user_id FROM $wpdb->comments WHERE $wpdb->comments.comment_post_ID=%d AND $wpdb->comments.user_id <> ''", $post_ID);
 
 		$this->log($q, 1);
 
-		$users = $wpdb->get_col($q);
+		$users=$wpdb->get_col($q);
 
 		/*
 		did we receive any commenters?
@@ -1196,7 +1196,7 @@ class FeaturingCountComments {
 		foreach ($users as $user) {
 			if ($this->is_integer($user)) {
 				$this->cache[$user] = 0;
-				$aq.="'".$wpdb->escape($user)."', ";
+				$aq.=$user.',';
 			}
 		}
 
@@ -1211,17 +1211,17 @@ class FeaturingCountComments {
 		remove trailing ", "
 		*/
 
-		$aq=substr($aq, 0, -2);
+		$aq=substr($aq, 0, -1);
 
 		/*
 		get comment counts
 		*/
 
-		$q = "SELECT $wpdb->comments.user_id, COUNT($wpdb->comments.comment_ID) AS count FROM $wpdb->comments WHERE $wpdb->comments.comment_approved = '1' and $wpdb->comments.user_id in ( $aq ) GROUP BY $wpdb->comments.user_id";
+		$q="SELECT $wpdb->comments.user_id, COUNT($wpdb->comments.comment_ID) AS count FROM $wpdb->comments WHERE $wpdb->comments.comment_approved='1' AND $wpdb->comments.user_id IN ($aq) GROUP BY $wpdb->comments.user_id";
 
 		$this->log($q, 1);
 
-		$rows = $wpdb->get_results($q);
+		$rows=$wpdb->get_results($q);
 
 		/*
 		did we receive any results?
@@ -1257,7 +1257,7 @@ class FeaturingCountComments {
 		if (!isset($this->cache[$user_id])) {
 			$this->log('cache user comment count for user_id '.$user_id);
 
-			$q = "SELECT COUNT($wpdb->comments.comment_ID) FROM $wpdb->comments WHERE $wpdb->comments.comment_approved = '1' AND $wpdb->comments.user_id = $user_id";
+			$q=$wpdb->prepare("SELECT COUNT($wpdb->comments.comment_ID) FROM $wpdb->comments WHERE $wpdb->comments.comment_approved='1' AND $wpdb->comments.user_id=%d", $user_id);
 
 			$this->log($q, 1);
 
@@ -1265,7 +1265,7 @@ class FeaturingCountComments {
 			get comment count for user
 			*/
 
-			$count = $wpdb->get_var($q);
+			$count=$wpdb->get_var($q);
 
 			/*
 			store results in cache
@@ -1490,7 +1490,7 @@ class FeaturingCountComments {
 		*/
 
 		if (!current_user_can($permissions))
-			wp_die(__('You do not have sufficient permissions to display this page.'));
+			wp_die(__('You do not have sufficient permissions to access this page.'), '', array('response' => 403));
 
 		/*
 		option-page html
@@ -1501,7 +1501,7 @@ class FeaturingCountComments {
 
 		<?php call_user_func(array($this, 'callback_'.$section_prefix.'_intro')); ?>
 
-		<div id="<?php echo($this->get_prefix()); ?>menu" style="display:none"><ul class="subsubsub <?php echo($this->get_prefix(false)); ?>">
+		<nav role="navigation" id="<?php echo($this->get_prefix()); ?>menu" style="display:none"><ul class="subsubsub <?php echo($this->get_prefix(false)); ?>">
 		<?php
 
 		$menu='';
@@ -1513,7 +1513,7 @@ class FeaturingCountComments {
 
 		echo($menu);
 		?>
-		</ul></div>
+		</ul></nav>
 
 		<div id="<?php echo($this->get_prefix()); ?>content" class="<?php echo($this->get_prefix()); ?>wrap">
 
@@ -2051,7 +2051,7 @@ class FeaturingCountComments {
 
 	- `user_attribute`: one of the user's attributes (matching `query_type`), for example, the user_id or a WP_User object; if no user_attribute is given, will fallback to currently logged in user
 
-	- `query_type`: corresponding sql-field of user's attribute or WP_User object; default is `user_id`
+	- `query_type`: corresponding SQL-field of user's attribute or WP_User object; default is `user_id`
 
 		- user_id
 		- display_name
@@ -2280,31 +2280,3 @@ class WP_Widget_FeaturingCountComments extends WP_Widget {
 	}
 
 }
-
-/*
-UNINSTALL
-*/
-
-function featuring_countcomments_uninstall() {
- 
-		/*
-		security check
-		*/
-
-		if (!current_user_can('manage_options'))
-			wp_die(__('You do not have sufficient permissions to manage options for this blog.'));
-
-		/*
-		delete option-array
-		*/
-
-		delete_option('featuring_countcomments');
-
-		/*
-		delete widget-options
-		*/
-
-		delete_option('widget_featuring_countcomments');
-	}
-
-register_uninstall_hook(__FILE__, 'featuring_countcomments_uninstall');
