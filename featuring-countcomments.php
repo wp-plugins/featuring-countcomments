@@ -10,9 +10,9 @@ Author URI: http://www.bernhard-riedl.com/
 */
 
 /*
-Copyright 2006-2014 Dr. Bernhard Riedl
+Copyright 2006-2015 Dr. Bernhard Riedl
 
-Inspirations & Proof-Reading 2007-2014
+Inspirations & Proof-Reading 2007-2015
 by Veronika Grascher
 original idea by Martijn van der Kwast
 
