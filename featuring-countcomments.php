@@ -5,7 +5,7 @@ Plugin Name: Featuring CountComments
 Plugin URI: http://www.bernhard-riedl.com/projects/
 Description: Counts the number of comments for each user who has been logged in at the time of commenting.
 Author: Dr. Bernhard Riedl
-Version: 1.60
+Version: 1.61
 Author URI: http://www.bernhard-riedl.com/
 */
 
@@ -817,7 +817,7 @@ class FeaturingCountComments {
 	*/
 
 	function head_meta() {
-		echo("<meta name=\"".$this->get_nicename()."\" content=\"1.60\" />\n");
+		echo("<meta name=\"".$this->get_nicename()."\" content=\"1.61\" />\n");
 	}
 
 	/*
@@ -921,7 +921,7 @@ class FeaturingCountComments {
 
 			$query_arg['user_id']=$user_id;
 
-			$ret_val='<div class="post-com-count-wrapper"><a class="post-com-count" href="'.add_query_arg($query_arg, admin_url('edit-comments.php')).'" title="'.htmlentities('Comments Search for "'.$user_object->display_name.'"', ENT_QUOTES, get_option('blog_charset'), false).'"><span class="comment-count">'.$count.'</span></a></div>';
+			$ret_val='<div class="post-com-count-wrapper"><a class="post-com-count" href="'.esc_url(add_query_arg($query_arg, admin_url('edit-comments.php'))).'" title="'.htmlentities('Comments Search for "'.$user_object->display_name.'"', ENT_QUOTES, get_option('blog_charset'), false).'"><span class="comment-count">'.$count.'</span></a></div>';
 
 			return $ret_val;
 		}
@@ -1496,8 +1496,12 @@ class FeaturingCountComments {
 		option-page html
 		*/
 
+		global $wp_version;
+
+		$h_level=(version_compare($wp_version, '4.3', '>=')) ? '1' : '2';
+
 		?><div class="wrap">
-		<h2><?php echo($this->get_nicename()); ?></h2>
+		<h<?php echo($h_level); ?>><?php echo($this->get_nicename()); ?></h<?php echo($h_level); ?>>
 
 		<?php call_user_func(array($this, 'callback_'.$section_prefix.'_intro')); ?>
 
